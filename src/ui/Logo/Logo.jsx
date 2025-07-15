@@ -1,0 +1,24 @@
+import logoImg from "../../assets/logo/Logo.png";
+import styled from "styled-components";
+
+const StyledLogo = styled.img`
+  width: 100%;
+  max-width: 187px;
+  height: auto;
+  margin-top: 1rem;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+  object-fit: contain;
+
+  @media (max-width: 600px) {
+    max-width: 120px;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+`;
+
+function Logo() {
+  return <StyledLogo src={logoImg} alt="Logo image" />;
+}
+
+export default Logo;

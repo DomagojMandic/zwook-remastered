@@ -1,0 +1,231 @@
+import albertflores from "../assets/mock-avatars/image=albertflores.png";
+import anneteblack from "../assets/mock-avatars/image=annetteblack.png";
+import archieyoung from "../assets/mock-avatars/image=archieyoung.png";
+
+const avatars = [albertflores, anneteblack, archieyoung];
+
+const types = ["song", "artist", "album"];
+const podcastMockData = [
+  {
+    id: 1,
+    title: "Mystery Junction",
+    backgroundImage: avatars[0],
+    premium: true,
+    online: true,
+    to: "/",
+    type: types[0],
+    description: "A thrilling journey into the unknown.",
+  },
+  {
+    id: 2,
+    title: "Mystery Junction",
+    backgroundImage: avatars[1],
+    premium: true,
+    online: true,
+    to: "/",
+    type: types[1],
+    description: "Explore the secrets behind the music.",
+    songs: [
+      {
+        title: "Lost in Sound",
+        album: "Echoes",
+        dateAdded: "2024-05-01",
+        songTime: "3:45",
+      },
+      {
+        title: "Night Drive",
+        album: "Echoes",
+        dateAdded: "2024-05-03",
+        songTime: "4:12",
+      },
+      {
+        title: "Sunrise Groove",
+        album: "Echoes",
+        dateAdded: "2024-05-05",
+        songTime: "2:58",
+      },
+    ],
+  },
+  {
+    id: 3,
+    title: "Mystery Junction",
+    backgroundImage: avatars[2],
+    premium: true,
+    online: true,
+    to: "/",
+    type: types[2],
+    description: "Uncover stories from legendary albums.",
+    songs: [
+      {
+        title: "Midnight Mystery",
+        album: "Legendary",
+        dateAdded: "2024-04-21",
+        songTime: "3:33",
+      },
+      {
+        title: "Hidden Tracks",
+        album: "Legendary",
+        dateAdded: "2024-04-22",
+        songTime: "4:05",
+      },
+      {
+        title: "Finale",
+        album: "Legendary",
+        dateAdded: "2024-04-23",
+        songTime: "5:01",
+      },
+    ],
+  },
+  {
+    id: 4,
+    title: "Mystery Junction",
+    backgroundImage: avatars[0],
+    premium: true,
+    online: true,
+    to: "/",
+    type: types[0],
+    description: "A thrilling journey into the unknown.",
+  },
+  {
+    id: 5,
+    title: "Mystery Junction",
+    backgroundImage: avatars[1],
+    premium: true,
+    online: true,
+    to: "/",
+    type: types[1],
+    description: "Explore the secrets behind the music.",
+    songs: [
+      {
+        title: "Lost in Sound",
+        album: "Echoes",
+        dateAdded: "2024-05-01",
+        songTime: "3:45",
+      },
+      {
+        title: "Night Drive",
+        album: "Echoes",
+        dateAdded: "2024-05-03",
+        songTime: "4:12",
+      },
+      {
+        title: "Sunrise Groove",
+        album: "Echoes",
+        dateAdded: "2024-05-05",
+        songTime: "2:58",
+      },
+    ],
+  },
+  {
+    id: 6,
+    title: "Mystery Junction",
+    backgroundImage: avatars[2],
+    premium: true,
+    online: true,
+    to: "/",
+    type: types[2],
+    description: "Uncover stories from legendary albums.",
+    songs: [
+      {
+        title: "Midnight Mystery",
+        album: "Legendary",
+        dateAdded: "2024-04-21",
+        songTime: "3:33",
+      },
+      {
+        title: "Hidden Tracks",
+        album: "Legendary",
+        dateAdded: "2024-04-22",
+        songTime: "4:05",
+      },
+      {
+        title: "Finale",
+        album: "Legendary",
+        dateAdded: "2024-04-23",
+        songTime: "5:01",
+      },
+    ],
+  },
+  {
+    id: 7,
+    title: "Mystery Junction",
+    backgroundImage: avatars[0],
+    premium: true,
+    online: true,
+    to: "/",
+    type: types[0],
+    description: "A thrilling journey into the unknown.",
+  },
+  {
+    id: 8,
+    title: "Mystery Junction",
+    backgroundImage: avatars[1],
+    premium: true,
+    online: true,
+    to: "/",
+    type: types[1],
+    description: "Explore the secrets behind the music.",
+    songs: [
+      {
+        title: "Lost in Sound",
+        album: "Echoes",
+        dateAdded: "2024-05-01",
+        songTime: "3:45",
+      },
+      {
+        title: "Night Drive",
+        album: "Echoes",
+        dateAdded: "2024-05-03",
+        songTime: "4:12",
+      },
+      {
+        title: "Sunrise Groove",
+        album: "Echoes",
+        dateAdded: "2024-05-05",
+        songTime: "2:58",
+      },
+    ],
+  },
+  {
+    id: 9,
+    title: "Mystery Junction",
+    backgroundImage: avatars[2],
+    premium: true,
+    online: true,
+    to: "/",
+    type: types[2],
+    description: "Uncover stories from legendary albums.",
+    songs: [
+      {
+        title: "Midnight Mystery",
+        album: "Legendary",
+        dateAdded: "2024-04-21",
+        songTime: "3:33",
+      },
+      {
+        title: "Hidden Tracks",
+        album: "Legendary",
+        dateAdded: "2024-04-22",
+        songTime: "4:05",
+      },
+      {
+        title: "Finale",
+        album: "Legendary",
+        dateAdded: "2024-04-23",
+        songTime: "5:01",
+      },
+    ],
+  },
+  {
+    id: 10,
+    title: "Mystery Junction",
+    backgroundImage: avatars[0],
+    premium: true,
+    online: true,
+    to: "/",
+    type: types[0],
+    description: "A thrilling journey into the unknown.",
+  },
+];
+
+export default podcastMockData;
