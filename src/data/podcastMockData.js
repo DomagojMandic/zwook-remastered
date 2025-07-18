@@ -1,6 +1,6 @@
-import albertflores from "../assets/mock-avatars/image=albertflores.png";
-import anneteblack from "../assets/mock-avatars/image=annetteblack.png";
-import archieyoung from "../assets/mock-avatars/image=archieyoung.png";
+import albertflores from "../assets/mock-avatars/image=albertflores.webp";
+import anneteblack from "../assets/mock-avatars/image=annetteblack.webp";
+import archieyoung from "../assets/mock-avatars/image=archieyoung.webp";
 
 const avatars = [albertflores, anneteblack, archieyoung];
 
@@ -27,22 +27,31 @@ const podcastMockData = [
     description: "Explore the secrets behind the music.",
     songs: [
       {
+        id: 1,
         title: "Lost in Sound",
         album: "Echoes",
         dateAdded: "2024-05-01",
         songTime: "3:45",
+        type: "song",
+        backgroundImage: albertflores,
       },
       {
+        id: 2,
         title: "Night Drive",
         album: "Echoes",
         dateAdded: "2024-05-03",
         songTime: "4:12",
+        type: "song",
+        backgroundImage: anneteblack,
       },
       {
+        id: 3,
         title: "Sunrise Groove",
         album: "Echoes",
         dateAdded: "2024-05-05",
         songTime: "2:58",
+        type: "song",
+        backgroundImage: archieyoung,
       },
     ],
   },
@@ -57,22 +66,31 @@ const podcastMockData = [
     description: "Uncover stories from legendary albums.",
     songs: [
       {
+        id: 4,
         title: "Midnight Mystery",
         album: "Legendary",
         dateAdded: "2024-04-21",
         songTime: "3:33",
+        type: "song",
+        backgroundImage: albertflores,
       },
       {
+        id: 5,
         title: "Hidden Tracks",
         album: "Legendary",
         dateAdded: "2024-04-22",
         songTime: "4:05",
+        type: "song",
+        backgroundImage: anneteblack,
       },
       {
+        id: 6,
         title: "Finale",
         album: "Legendary",
         dateAdded: "2024-04-23",
         songTime: "5:01",
+        type: "song",
+        backgroundImage: archieyoung,
       },
     ],
   },
@@ -97,22 +115,31 @@ const podcastMockData = [
     description: "Explore the secrets behind the music.",
     songs: [
       {
+        id: 4,
         title: "Lost in Sound",
         album: "Echoes",
         dateAdded: "2024-05-01",
         songTime: "3:45",
+        type: "song",
+        backgroundImage: albertflores,
       },
       {
+        id: 5,
         title: "Night Drive",
         album: "Echoes",
         dateAdded: "2024-05-03",
         songTime: "4:12",
+        type: "song",
+        backgroundImage: anneteblack,
       },
       {
+        id: 6,
         title: "Sunrise Groove",
         album: "Echoes",
         dateAdded: "2024-05-05",
         songTime: "2:58",
+        type: "song",
+        backgroundImage: archieyoung,
       },
     ],
   },
@@ -127,22 +154,31 @@ const podcastMockData = [
     description: "Uncover stories from legendary albums.",
     songs: [
       {
+        id: 7,
         title: "Midnight Mystery",
         album: "Legendary",
         dateAdded: "2024-04-21",
         songTime: "3:33",
+        type: "song",
+        backgroundImage: albertflores,
       },
       {
+        id: 8,
         title: "Hidden Tracks",
         album: "Legendary",
         dateAdded: "2024-04-22",
         songTime: "4:05",
+        type: "song",
+        backgroundImage: anneteblack,
       },
       {
+        id: 9,
         title: "Finale",
         album: "Legendary",
         dateAdded: "2024-04-23",
         songTime: "5:01",
+        type: "song",
+        backgroundImage: archieyoung,
       },
     ],
   },
@@ -167,22 +203,31 @@ const podcastMockData = [
     description: "Explore the secrets behind the music.",
     songs: [
       {
+        id: 10,
         title: "Lost in Sound",
         album: "Echoes",
         dateAdded: "2024-05-01",
         songTime: "3:45",
+        type: "song",
+        backgroundImage: albertflores,
       },
       {
+        id: 11,
         title: "Night Drive",
         album: "Echoes",
         dateAdded: "2024-05-03",
         songTime: "4:12",
+        type: "song",
+        backgroundImage: anneteblack,
       },
       {
+        id: 12,
         title: "Sunrise Groove",
         album: "Echoes",
         dateAdded: "2024-05-05",
         songTime: "2:58",
+        type: "song",
+        backgroundImage: archieyoung,
       },
     ],
   },
@@ -197,22 +242,31 @@ const podcastMockData = [
     description: "Uncover stories from legendary albums.",
     songs: [
       {
+        id: 13,
         title: "Midnight Mystery",
         album: "Legendary",
         dateAdded: "2024-04-21",
         songTime: "3:33",
+        type: "song",
+        backgroundImage: albertflores,
       },
       {
+        id: 14,
         title: "Hidden Tracks",
         album: "Legendary",
         dateAdded: "2024-04-22",
         songTime: "4:05",
+        type: "song",
+        backgroundImage: anneteblack,
       },
       {
+        id: 15,
         title: "Finale",
         album: "Legendary",
         dateAdded: "2024-04-23",
         songTime: "5:01",
+        type: "song",
+        backgroundImage: archieyoung,
       },
     ],
   },

@@ -83,7 +83,6 @@ StyledFeaturedPodcasts.Item = styled(Link)`
         ? `url(${props.$backgroundImage}) no-repeat center center / cover`
         : "none"};
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
   }
 
   // Zoom background image on hover

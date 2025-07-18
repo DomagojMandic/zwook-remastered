@@ -4,8 +4,7 @@ import styled from "styled-components";
 import StyledPlaylistDetails from "./StyledPlaylistDetails";
 import PlaylistTable from "./PlaylistTable";
 
-import abstractImage1 from "../../assets/mock-cover/abstract-image-1.png";
-
+import abstractImage1 from "../../assets/mock-cover/abstract-image-1.webp";
 import mocksong from "../../assets/mock-songs/image-type=Image1.png";
 import StyledTable from "../../ui/Table/StyledTable";
 import PlaylistRowItem from "./PlaylistIRowItem";

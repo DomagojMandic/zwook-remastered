@@ -7,17 +7,26 @@ export default function useDragToScroll() {
     const el = ref.current;
     if (!el) return;
 
-    // Select all direct children of the element
-    const children = el.querySelectorAll(":scope > *");
-
-    const preventDragstart = (e) => e.preventDefault();
-
-    children.forEach((child) => {
-      if (child instanceof HTMLElement) {
-        child.setAttribute("draggable", "false");
-        child.addEventListener("dragstart", preventDragstart);
-      }
+    // Use MutationObserver to watch for DOM changes
+    const observer = new MutationObserver(() => {
+      setupDragToScroll();
     });
+
+    const setupDragToScroll = () => {
+      // Select all direct children of the element
+      const children = el.querySelectorAll(":scope > *");
+
+      const preventDragstart = (e) => e.preventDefault();
+
+      children.forEach((child) => {
+        if (child instanceof HTMLElement) {
+          child.setAttribute("draggable", "false");
+          child.style.userSelect = "none";
+          child.style.webkitUserSelect = "none";
+          child.addEventListener("dragstart", preventDragstart);
+        }
+      });
+    };
 
     let isDown = false;
     let startX = 0;
@@ -35,6 +44,7 @@ export default function useDragToScroll() {
       startX = e.clientX;
       scrollLeft = el.scrollLeft;
       moved = false;
+      el.style.cursor = "grabbing";
     };
 
     const onMouseUpOrLeave = () => {
@@ -42,6 +52,7 @@ export default function useDragToScroll() {
         el.addEventListener("click", preventClick, true);
       }
       isDown = false;
+      el.style.cursor = "grab";
     };
 
     const onMouseMove = (e) => {
@@ -56,15 +67,29 @@ export default function useDragToScroll() {
       }
     };
 
+    // Initial setup
+    setupDragToScroll();
+    el.style.cursor = "grab";
+
+    // Start observing
+    observer.observe(el, { childList: true, subtree: true });
+
     el.addEventListener("mousedown", onMouseDown);
     el.addEventListener("mouseup", onMouseUpOrLeave);
     el.addEventListener("mouseleave", onMouseUpOrLeave);
     el.addEventListener("mousemove", onMouseMove);
 
     return () => {
+      observer.disconnect();
+
+      const children = el.querySelectorAll(":scope > *");
       children.forEach((child) => {
-        child.removeEventListener("dragstart", preventDragstart);
-        child.removeAttribute("draggable");
+        if (child instanceof HTMLElement) {
+          child.removeEventListener("dragstart", (e) => e.preventDefault());
+          child.removeAttribute("draggable");
+          child.style.userSelect = "";
+          child.style.webkitUserSelect = "";
+        }
       });
 
       el.removeEventListener("mousedown", onMouseDown);
@@ -72,6 +97,7 @@ export default function useDragToScroll() {
       el.removeEventListener("mouseleave", onMouseUpOrLeave);
       el.removeEventListener("mousemove", onMouseMove);
       el.removeEventListener("click", preventClick, true);
+      el.style.cursor = "";
     };
   }, []);
 

@@ -1,7 +1,7 @@
 import StyledFeaturedPodcasts from "./StyledFeaturedPodcasts";
 import FeaturedButton from "../Buttons/FeaturedButton";
 
-import albertflores from "../../assets/mock-avatars/image=albertflores.png";
+import albertflores from "../../assets/mock-avatars/image=albertflores.webp";
 import useDragToScroll from "../../hooks/useDragToScroll";
 
 function FeaturedPodcasts() {

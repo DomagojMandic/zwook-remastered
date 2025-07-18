@@ -1,10 +1,14 @@
 import styled from "styled-components";
+
 import Banner from "../../ui/Banner/Banner";
 import FeaturedButton from "../../ui/Buttons/FeaturedButton";
 import FeaturedSection from "../../ui/FeaturedSection/FeaturedSection";
 import FeaturedPodcasts from "../../ui/FeaturedPodcasts/FeaturedPodcasts";
 
-import podcastMockData from "../../data/podcastMockData";
+import { FeaturedSectionProvider } from "../../contexts/FeaturedSectionContext";
+
+import useSongs from "../../hooks/useSongs";
+import useAlbums from "../../hooks/useAlbums";
 
 const StyledBannerContainer = styled.div`
   display: flex;
@@ -28,6 +32,8 @@ const categoriesButtons = [
   <FeaturedButton key="view all">View All</FeaturedButton>,
 ];
 
+/* We provide a Context for each FeaturedSection with defined customHook, children, 
+title and an array of button Components to Render */
 function Dashboard() {
   return (
     <>
@@ -36,12 +42,20 @@ function Dashboard() {
         <Banner />
       </StyledBannerContainer>
       <FeaturedPodcasts />
-      <FeaturedSection
-        title="Categories"
+      <FeaturedSectionProvider
+        customHook={useSongs}
+        title="Songs"
         buttons={featuredButtons}
-        items={podcastMockData}
-      />
-      <FeaturedSection buttons={categoriesButtons} items={podcastMockData} />
+      >
+        <FeaturedSection />
+      </FeaturedSectionProvider>
+      <FeaturedSectionProvider
+        customHook={useAlbums}
+        title="Albums"
+        buttons={categoriesButtons}
+      >
+        <FeaturedSection />
+      </FeaturedSectionProvider>
     </>
   );
 }

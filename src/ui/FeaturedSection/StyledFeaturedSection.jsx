@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+import scrollTextAnimation from "../Animations/scrollTextAnimation";
+
 const StyledFeaturedSection = styled.section`
   display: flex;
   flex-direction: column;
@@ -50,6 +52,7 @@ StyledFeaturedSection.Item = styled(Link)`
   text-decoration: none;
   position: relative;
   overflow: hidden;
+  contain: layout style;
 
   &:hover {
     padding-left: 0;
@@ -57,21 +60,31 @@ StyledFeaturedSection.Item = styled(Link)`
   }
 
   &:hover img {
-    transform: scale(1.2); // Zoom effect from the center
+    transform: scale3d(1.08, 1.08, 1); // GPU-optimized transform
   }
 
   &:hover figcaption {
     position: absolute;
     bottom: 0;
-    left: 2px;
+    left: 0;
     right: 0;
-    padding: 0.6rem 1rem;
-    background: rgba(255 255 255 / 0.15);
-    backdrop-filter: saturate(180%) blur(10px);
+    padding: 0.8rem 1.2rem;
+    background: rgba(0, 0, 0, 0.8);
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
-    color: var(--text-primary-300);
-    z-index: 1;
+    color: white;
+    z-index: 3;
+    opacity: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &:hover ${() => StyledFeaturedSection.AnimationSpan}[data-overflow="true"] {
+    animation: ${scrollTextAnimation} 2s ease-in-out;
+    animation-delay: 0.3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
   }
 `;
 
@@ -88,12 +101,39 @@ StyledFeaturedSection.ItemTitle = styled.figcaption`
   font-size: 1.4rem;
   margin: 0;
   color: var(--text-primary-300);
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
   position: relative;
   padding-top: 0.8rem;
+  padding-left: 1px;
+  padding-right: 1px;
   width: 100%;
   z-index: 2;
   pointer-events: none;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  opacity: 1;
+  background: transparent;
+  border-radius: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+/* Should be used within the figcaption element if we want the scrollAnimation to work */
+StyledFeaturedSection.AnimationSpan = styled.span`
+  white-space: nowrap;
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: transform 0.3s ease;
+
+  ${StyledFeaturedSection.Item}:hover & {
+    width: auto;
+    min-width: 100%;
+    overflow: visible;
+    text-overflow: initial;
+  }
 `;
 
 StyledFeaturedSection.Image = styled.img`
@@ -102,7 +142,6 @@ StyledFeaturedSection.Image = styled.img`
   object-fit: cover;
   border-radius: 8px;
   transition: transform 0.5s ease-in-out;
-  will-change: transform;
   transform-origin: bottom;
 `;
 
@@ -115,7 +154,7 @@ StyledFeaturedSection.TitleWrapper = styled.div`
 StyledFeaturedSection.Title = styled.h3`
   font-size: ${(props) => (props.size ? props.size : "2rem")};
   font-weight: 600;
-  color: var(--text-primary-300);
+  color: var(--text-primary-100);
   margin-bottom: 1rem;
   text-align: center;
 `;

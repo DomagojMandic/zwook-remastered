@@ -1,14 +1,51 @@
 import StyledFeaturedCard from "./StyledFeaturedSection";
-import FeaturedButton from "../Buttons/FeaturedButton";
 
-import albertflores from "../../assets/mock-avatars/image=albertflores.png";
-import anneteblack from "../../assets/mock-avatars/image=annetteblack.png";
-import archieyoung from "../../assets/mock-avatars/image=archieyoung.png";
-import brooklynsimmons from "../../assets/mock-avatars/image=brooklynsimmons.png";
 import useDragToScroll from "../../hooks/useDragToScroll";
+import SkeletonCardComponent from "./SkeletonCardComponent";
+import { useFeaturedSection } from "../../contexts/FeaturedSectionContext";
 
-function FeaturedSection({ title = "Featured", buttons = [], items = [] }) {
+function FeaturedSection() {
+  const { items, isLoading, isSuccess, title, buttons } = useFeaturedSection();
+
   const ref = useDragToScroll();
+
+  // Used for rendering skeleton cards before the data is loaded
+  // This is a fixed number, but could be dynamic based on screen size
+  const skeletonCount = 8;
+
+  function renderSkeletonItems() {
+    return Array.from({ length: skeletonCount }).map((_, index) => (
+      <SkeletonCardComponent key={`skeleton-${index}`} />
+    ));
+  }
+
+  console.log(items);
+
+  /* 
+  Used for rendering each item in the featured section when not loading 
+  Because it is used for rendering dynamic types of media, it should always be the
+  same format.
+    */
+  function renderFeaturedItem(item) {
+    return (
+      <StyledFeaturedCard.Item
+        to={`/media/${item.type}/${item.id}`}
+        key={`${item.type}-${item.id}`}
+      >
+        <StyledFeaturedCard.Figure>
+          <StyledFeaturedCard.Image src={item.cover_url} alt={item.title} />
+          <StyledFeaturedCard.ItemTitle>
+            {/* Span is used to trigger the scroll animation */}
+            <StyledFeaturedCard.AnimationSpan
+              data-overflow={item.title.length > 19}
+            >
+              {item.title}
+            </StyledFeaturedCard.AnimationSpan>
+          </StyledFeaturedCard.ItemTitle>
+        </StyledFeaturedCard.Figure>
+      </StyledFeaturedCard.Item>
+    );
+  }
 
   return (
     <StyledFeaturedCard>
@@ -23,24 +60,8 @@ function FeaturedSection({ title = "Featured", buttons = [], items = [] }) {
         )}
       </StyledFeaturedCard.TitleWrapper>
       <StyledFeaturedCard.ItemWrapper ref={ref}>
-        {items.map((item) => {
-          return (
-            <StyledFeaturedCard.Item
-              to={`/media/${item.type}/${item.id}`}
-              key={item.id}
-            >
-              <StyledFeaturedCard.Figure>
-                <StyledFeaturedCard.Image
-                  src={item.backgroundImage}
-                  alt={item.title}
-                />
-                <StyledFeaturedCard.ItemTitle>
-                  {item.title}
-                </StyledFeaturedCard.ItemTitle>
-              </StyledFeaturedCard.Figure>
-            </StyledFeaturedCard.Item>
-          );
-        })}
+        {isLoading && renderSkeletonItems()}
+        {isSuccess && items?.map(renderFeaturedItem)}
       </StyledFeaturedCard.ItemWrapper>
     </StyledFeaturedCard>
   );

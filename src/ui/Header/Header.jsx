@@ -4,7 +4,7 @@ import { CiWavePulse1 } from "react-icons/ci";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import StyledInput from "../SimpleComponents/StyledInput";
 import StyledHeader from "./StyledHeader";
-import avatarImg from "../../assets/mock-avatars/image=albertflores.png";
+import avatarImg from "../../assets/mock-avatars/image=albertflores.webp";
 
 function Header() {
   return (
