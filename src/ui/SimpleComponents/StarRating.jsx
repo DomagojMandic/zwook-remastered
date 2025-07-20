@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 import { useState } from "react";
-import { MdOutlineStarBorder } from "react-icons/md";
 import StarButton from "../Buttons/StarButton";
 import { STARS_ARRAY } from "../../data/starRating";
 
@@ -16,7 +15,7 @@ const StyledSpan = styled.span`
   color: var(--text-secondary-300);
   font-weight: 500;
   margin-left: 0.5rem;
-  opacity: ${(props) => (props.rating > 0 ? 1 : 0.6)};
+  opacity: ${(props) => (props.$rating > 0 ? 1 : 0.6)};
   transition: opacity 0.2s ease;
 `;
 
@@ -35,7 +34,7 @@ function StarRating({ rating, onRatingChange, type, size = "20px" }) {
           size={size}
         />
       ))}
-      <StyledSpan rating={rating}>
+      <StyledSpan $rating={rating}>
         {rating > 0 ? `${rating}/5` : "Rate"}
       </StyledSpan>
     </StyledStarRating>

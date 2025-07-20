@@ -27,6 +27,7 @@ StyledFeaturedSection.ItemWrapper = styled.div`
   gap: 2rem;
   overflow-x: auto;
   width: 100%;
+  cursor: default; /* Override grabbing cursor */
 
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */

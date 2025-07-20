@@ -129,6 +129,7 @@ const mockSongs = [
 function PlaylistTable({ items, render }) {
   const [showAll, setShowAll] = useState(false);
 
+  console.log(items);
   const displayedItems = showAll ? items : items.slice(0, 6);
 
   // Used on a button to toggle the visibility of all items

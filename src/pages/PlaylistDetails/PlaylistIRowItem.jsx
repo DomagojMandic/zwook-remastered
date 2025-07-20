@@ -26,8 +26,8 @@ const Image = styled.img`
 const SongContent = styled.span`
   display: flex;
   align-items: center;
-  font-size: ${({ maxFontSize = "1.2rem" }) =>
-    `clamp(1rem, 1vw, ${maxFontSize})`};
+  font-size: ${({ $maxFontSize = "1.2rem" }) =>
+    `clamp(1rem, 1vw, ${$maxFontSize})`};
   color: ${({ color = "var(--text-primary-500)" }) =>
     color ? color : "var(--text-secondary-300)"};
 `;
@@ -37,17 +37,17 @@ function PlaylistRowItem({ item, index }) {
     <>
       <SongContent>{index + 1}</SongContent>
       <TitleContainer>
-        <Image src={item.image} alt={item.title} />
+        <Image src={item.cover_url} alt={item.title} />
         <TitleWrapper>
-          <SongContent maxFontSize="1.2rem">{item.title}</SongContent>
-          <SongContent maxFontSize="1rem" color="var(--text-secondary-300)">
+          <SongContent $maxFontSize="1.2rem">{item.title}</SongContent>
+          <SongContent $maxFontSize="1rem" color="var(--text-secondary-300)">
             {item.artist}
           </SongContent>
         </TitleWrapper>
       </TitleContainer>
       <SongContent>{item.album}</SongContent>
       <SongContent>{item.dateAdded}</SongContent>
-      <SongContent>{item.songTime}</SongContent>
+      <SongContent>{item.duration}</SongContent>
     </>
   );
 }

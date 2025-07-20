@@ -13,19 +13,30 @@ StyledMediaItemPage.Container = styled.div`
   gap: 2rem;
   margin-left: clamp(1rem, 2.5vw, 4rem);
   margin-right: clamp(1rem, 2.5vw, 4rem);
+
+  @media (max-width: 1280px) {
+    flex-direction: column;
+  }
 `;
 
 StyledMediaItemPage.Image = styled.img`
-  width: clamp(20%, 20vw, 40%);
-  height: auto;
+  width: clamp(20%, 25vw - 3rem, 40%);
+  aspect-ratio: 1; /* kvadratna slika - width = height */
+  flex-basis: 1;
   border-radius: 8px;
   object-fit: cover;
+
+  @media (max-width: 1280px) {
+    align-self: center;
+  }
 `;
 
 StyledMediaItemPage.DetailsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  flex: 1; /* uzima ostatak prostora */
+  min-width: 0; /* omogućava text wrapping */
   color: var(--text-primary-300);
 `;
 
@@ -45,11 +56,10 @@ StyledMediaItemPage.Type = styled.div`
 `;
 
 StyledMediaItemPage.Description = styled.p`
-  font-size: clamp(1.4rem, 1.7vw, 2.5rem);
+  font-size: clamp(1rem, 1vw + 0.8rem, 1.3rem);
   transition: all 0.3s;
   padding-right: 2.1rem;
   padding-left: 0;
-
   line-height: 1.5;
   word-break: break-word;
 `;

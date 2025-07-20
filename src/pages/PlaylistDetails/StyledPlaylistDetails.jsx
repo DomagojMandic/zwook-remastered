@@ -48,6 +48,8 @@ StyledPlaylistDetails.BannerIcon = styled.img`
   display: block;
   border-radius: 8px;
   object-fit: cover;
+  text-wrap: wrap;
+  font-size: 0.8rem;
 `;
 
 StyledPlaylistDetails.BannerDescription = styled.p`
