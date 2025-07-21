@@ -6,6 +6,7 @@ import FeaturedSection from "../../ui/FeaturedSection/FeaturedSection";
 import FeaturedPodcasts from "../../ui/FeaturedPodcasts/FeaturedPodcasts";
 
 import { FeaturedSectionProvider } from "../../contexts/FeaturedSectionContext";
+import { renderFeaturedItem } from "../../utils/renderFeaturedItem";
 
 import useSongs from "../../hooks/useSongs";
 import useAlbums from "../../hooks/useAlbums";
@@ -46,6 +47,7 @@ function Dashboard() {
         customHook={useSongs}
         title="Songs"
         buttons={featuredButtons}
+        renderItem={renderFeaturedItem}
       >
         <FeaturedSection />
       </FeaturedSectionProvider>
@@ -53,6 +55,7 @@ function Dashboard() {
         customHook={useAlbums}
         title="Albums"
         buttons={categoriesButtons}
+        renderItem={renderFeaturedItem}
       >
         <FeaturedSection />
       </FeaturedSectionProvider>

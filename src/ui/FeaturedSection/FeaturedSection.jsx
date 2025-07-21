@@ -5,7 +5,8 @@ import SkeletonCardComponent from "./SkeletonCardComponent";
 import { useFeaturedSection } from "../../contexts/FeaturedSectionContext";
 
 function FeaturedSection() {
-  const { items, isLoading, isSuccess, title, buttons } = useFeaturedSection();
+  const { items, isLoading, isSuccess, title, buttons, renderItem } =
+    useFeaturedSection();
 
   const ref = useDragToScroll();
 
@@ -21,32 +22,6 @@ function FeaturedSection() {
 
   console.log(items);
 
-  /* 
-  Used for rendering each item in the featured section when not loading 
-  Because it is used for rendering dynamic types of media, it should always be the
-  same format.
-    */
-  function renderFeaturedItem(item) {
-    return (
-      <StyledFeaturedCard.Item
-        to={`/media/${item.type}/${item.id}`}
-        key={`${item.type}-${item.id}`}
-      >
-        <StyledFeaturedCard.Figure>
-          <StyledFeaturedCard.Image src={item.cover_url} alt={item.title} />
-          <StyledFeaturedCard.ItemTitle>
-            {/* Span is used to trigger the scroll animation */}
-            <StyledFeaturedCard.AnimationSpan
-              data-overflow={item.title.length > 19}
-            >
-              {item.title}
-            </StyledFeaturedCard.AnimationSpan>
-          </StyledFeaturedCard.ItemTitle>
-        </StyledFeaturedCard.Figure>
-      </StyledFeaturedCard.Item>
-    );
-  }
-
   return (
     <StyledFeaturedCard>
       <StyledFeaturedCard.TitleWrapper>
@@ -61,7 +36,7 @@ function FeaturedSection() {
       </StyledFeaturedCard.TitleWrapper>
       <StyledFeaturedCard.ItemWrapper ref={ref}>
         {isLoading && renderSkeletonItems()}
-        {isSuccess && items?.map(renderFeaturedItem)}
+        {isSuccess && items?.map(renderItem)}
       </StyledFeaturedCard.ItemWrapper>
     </StyledFeaturedCard>
   );

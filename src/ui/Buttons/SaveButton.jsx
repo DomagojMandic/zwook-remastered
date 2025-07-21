@@ -29,20 +29,23 @@ const StyledSaveButton = styled.button`
   color: var(--text-dark-500);
   border: 1px solid var(--border-primary-300);
   cursor: pointer;
-  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0);
 
   /* Apply size styles based on the size prop */
   ${(props) => sizes[props.size || "medium"]}
 
-  &:hover,
-    &:active {
+  &:hover {
     background-color: var(--background-surface-300);
     color: var(--text-dark-500);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
     border-color: var(--text-dark-500);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   &:disabled {
@@ -55,7 +58,7 @@ const StyledSaveButton = styled.button`
   }
 `;
 
-function SaveButton({ children, onClick, preventDefault, ...props }) {
+function SaveButton({ children, onClick, ...props }) {
   return (
     <StyledSaveButton onClick={onClick} {...props}>
       {children}

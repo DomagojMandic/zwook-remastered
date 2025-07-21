@@ -21,7 +21,7 @@ StyledMediaItemPage.Container = styled.div`
 
 StyledMediaItemPage.Image = styled.img`
   width: clamp(20%, 25vw - 3rem, 40%);
-  aspect-ratio: 1; /* kvadratna slika - width = height */
+  aspect-ratio: 1;
   flex-basis: 1;
   border-radius: 8px;
   object-fit: cover;
@@ -35,8 +35,8 @@ StyledMediaItemPage.DetailsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  flex: 1; /* uzima ostatak prostora */
-  min-width: 0; /* omogućava text wrapping */
+  flex: 1;
+  min-width: 0;
   color: var(--text-primary-300);
 `;
 

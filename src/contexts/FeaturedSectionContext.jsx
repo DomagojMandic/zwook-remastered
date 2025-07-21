@@ -9,6 +9,7 @@ const FeaturedSectionContext = createContext();
  * @param {Function} customHook - Custom hook to fetch data with useQuery - it should be ready to use
  * @param {string} title - Title for the featured section
  * @param {Array} buttons - Array of button components to be displayed in the section
+ * @param {Function} renderItem - Function to render each featured item
  * @returns
  */
 
@@ -17,12 +18,13 @@ export function FeaturedSectionProvider({
   customHook,
   title,
   buttons,
+  renderItem,
 }) {
   const { data: items, error, isLoading, isSuccess } = customHook();
 
   return (
     <FeaturedSectionContext.Provider
-      value={{ title, buttons, items, error, isLoading, isSuccess }}
+      value={{ title, buttons, items, error, isLoading, isSuccess, renderItem }}
     >
       {children}
     </FeaturedSectionContext.Provider>
