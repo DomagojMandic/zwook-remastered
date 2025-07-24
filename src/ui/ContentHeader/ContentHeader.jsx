@@ -3,7 +3,7 @@ import useMoveBack from "../../hooks/useMoveBack";
 import FeaturedButton from "../Buttons/FeaturedButton";
 import SaveButton from "../Buttons/SaveButton";
 
-function ContentHeader({ title, createButtonText, onCreateClick }) {
+function ContentHeader({ title, type, showSaveButton = true }) {
   const moveBack = useMoveBack();
 
   return (
@@ -12,9 +12,11 @@ function ContentHeader({ title, createButtonText, onCreateClick }) {
         <FeaturedButton onClick={moveBack} size="medium">
           Back
         </FeaturedButton>
-        {createButtonText && (
-          <SaveButton onClick={onCreateClick} size="medium">
-            {createButtonText}
+
+        {showSaveButton && (
+          <SaveButton size="medium">
+            {type === "artist" && "Create Artist"}
+            {type === "album" && "Create Album"}
           </SaveButton>
         )}
       </StyledContentHeader.TopRow>

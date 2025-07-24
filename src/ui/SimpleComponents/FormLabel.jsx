@@ -8,6 +8,8 @@ const StyledFormLabel = styled.label`
   transform-origin: left center;
   position: relative;
   cursor: pointer;
+  padding-left: 1rem;
+  padding-bottom: 0.5rem;
 
   &:has(+ input:focus),
   &:has(+ textarea:focus) {

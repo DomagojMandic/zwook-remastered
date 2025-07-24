@@ -15,6 +15,7 @@ import GlobalStyles from "./styles/GlobalStyles";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Login from "./pages/Login/Login";
 import AppLayout from "./ui/AppLayout/AppLayout";
+import MediaForm from "./pages/MediaForm/MediaForm";
 
 /* Lazy loaded components */
 const Devices = lazy(() => import("./pages/Devices/Devices"));
@@ -51,6 +52,15 @@ const router = createBrowserRouter([
       { path: "stations", element: <Stations /> },
       { path: "podcasts", element: <CreatePodcasts /> },
       { path: "artists", element: <Artists /> },
+      {
+        path: "create",
+        children: [
+          {
+            path: ":type", // Allowed types: artist, album, song
+            element: <MediaForm />,
+          },
+        ],
+      },
       {
         path: "media",
         children: [{ path: ":type/:mediaItemId", element: <MediaItemPage /> }],

@@ -7,11 +7,7 @@ import { renderGalleryItem } from "../../utils/renderGalleryItem";
 
 function Albums() {
   const { data: albums, error, isLoading, isSuccess } = useAlbums();
-
-  const handleCreateAlbum = () => {
-    // TODO: Implement create album functionality
-    console.log("Create album clicked");
-  };
+  const type = "album";
 
   if (isLoading) {
     return <SkeletonContentGalleryComponent />;
@@ -21,11 +17,9 @@ function Albums() {
   return (
     <ContentGallery
       items={albums}
-      type="album"
+      type={type}
       render={renderGalleryItem}
       title="Albums"
-      createButtonText="Create Album"
-      onCreateClick={handleCreateAlbum}
     />
   );
 }

@@ -5,11 +5,7 @@ import { renderGalleryItem } from "../../utils/renderGalleryItem";
 
 function Artists() {
   const { data: artists, error, isLoading, isSuccess } = useArtists();
-
-  const handleCreateArtist = () => {
-    // TODO: Implement create artist functionality
-    console.log("Create artist clicked");
-  };
+  const type = "artist";
 
   if (isLoading) {
     return <SkeletonContentGalleryComponent />;
@@ -19,11 +15,9 @@ function Artists() {
   return (
     <ContentGallery
       items={artists}
-      type="artist"
       render={renderGalleryItem}
       title="Artists"
-      createButtonText="Create Artist"
-      onCreateClick={handleCreateArtist}
+      type={type}
     />
   );
 }
