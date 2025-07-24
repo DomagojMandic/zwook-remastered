@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { forwardRef } from "react";
 
 const StyledFormTextarea = styled.textarea`
   font-size: clamp(1.2rem, 2.5vw, 1.4rem);
@@ -19,8 +20,8 @@ const StyledFormTextarea = styled.textarea`
   }
 `;
 
-function FormTextarea({ placeholder = "", id }) {
-  return <StyledFormTextarea placeholder={placeholder} id={id} />;
-}
+const FormTextarea = forwardRef(({ placeholder = "", id, ...props }, ref) => (
+  <StyledFormTextarea ref={ref} placeholder={placeholder} id={id} {...props} />
+));
 
 export default FormTextarea;

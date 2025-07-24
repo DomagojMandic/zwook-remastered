@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { IoCloudUploadOutline } from "react-icons/io5";
+import { forwardRef } from "react";
 
 const StyledFormUpload = styled.label`
   width: 100%;
@@ -19,7 +20,6 @@ const StyledFormUpload = styled.label`
 StyledFormUpload.Input = styled.input.attrs((props) => ({
   type: "file",
   accept: props.accept || ".png, .jpg, .jpeg",
-  "aria-label": "Upload file",
 }))`
   display: none;
 `;
@@ -46,11 +46,11 @@ StyledFormUpload.Description = styled.p`
   color: var(--text-primary-300);
 `;
 
-function FormUpload({ accept, id, ref }) {
+const FormUpload = forwardRef(({ accept, id, ...props }, ref) => {
   return (
     <>
-      <StyledFormUpload htmlFor={id} ref={ref}>
-        <StyledFormUpload.Input accept={accept} id={id} />
+      <StyledFormUpload htmlFor={inputId} ref={ref}>
+        <StyledFormUpload.Input accept={accept} id={inputId} {...props} />
         <StyledFormUpload.IconWrapper>
           <IoCloudUploadOutline />
         </StyledFormUpload.IconWrapper>
@@ -60,10 +60,10 @@ function FormUpload({ accept, id, ref }) {
           </span>
           or drag and drop
         </StyledFormUpload.Description>
-        <p>SVG, PPNG, JPEG, TIFF or GIF</p>
+        <p>SVG, PNG, JPEG, TIFF or GIF</p>
       </StyledFormUpload>
     </>
   );
-}
+});
 
 export default FormUpload;

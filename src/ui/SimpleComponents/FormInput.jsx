@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { forwardRef } from "react";
 
 const StyledFormInput = styled.input`
   font-size: clamp(1.2rem, 2.5vw, 1.4rem);
@@ -17,8 +18,18 @@ const StyledFormInput = styled.input`
   }
 `;
 
-function FormInput({ type = "text", placeholder = "", id }) {
-  return <StyledFormInput type={type} placeholder={placeholder} id={id} />;
-}
+const FormInput = forwardRef(
+  ({ type = "text", placeholder = "", id, ...props }, ref) => {
+    return (
+      <StyledFormInput
+        ref={ref}
+        type={type}
+        placeholder={placeholder}
+        id={id}
+        {...props}
+      />
+    );
+  }
+);
 
 export default FormInput;

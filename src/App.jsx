@@ -16,6 +16,8 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import Login from "./pages/Login/Login";
 import AppLayout from "./ui/AppLayout/AppLayout";
 import MediaForm from "./pages/MediaForm/MediaForm";
+import { Toaster } from "react-hot-toast";
+import { toasterOptions } from "./data/toasterOptions";
 
 /* Lazy loaded components */
 const Devices = lazy(() => import("./pages/Devices/Devices"));
@@ -78,6 +80,7 @@ function App() {
       <ReactQueryDevtools initialIsOpen={false} />
       <GlobalStyles />
       <RouterProvider router={router} />
+      <Toaster {...toasterOptions} />
     </QueryClientProvider>
   );
 }

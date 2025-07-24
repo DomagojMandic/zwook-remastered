@@ -1,4 +1,6 @@
-import supabase from "./supabase";
+import supabase, { SUPABASE_URL } from "./supabase";
+
+const ARTIST_BUCKET = "/storage/v1/object/public/images/covers/albums/";
 
 /**
  * Fetches all albums from the database.
@@ -37,4 +39,25 @@ export async function getAlbumById(id) {
   }
 
   return album;
+}
+
+export async function createAlbum(albumData) {
+  /* Creating a full image URL. Replace all "/" so it doesn't create
+     another nested folder */
+  const imageName = albumData.coverName.replaceAll("/", "");
+  const imageUrl = `${SUPABASE_URL + ARTIST_BUCKET + imageName}`;
+
+  console.log("ImageURL: ", imageUrl, { ...albumData, coverUrl: imageUrl });
+
+  /* const { data, error } = await supabase
+    .from("albums")
+    .insert([{ ...albumData, coverUrl: imageUrl }])
+    .select(); */
+
+  console.log("dođe li do ovdje?");
+  if (error) {
+    throw new Error(`Error while creating album. Please try again later.`);
+  }
+
+  return data;
 }
