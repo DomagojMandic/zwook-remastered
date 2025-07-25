@@ -2,7 +2,10 @@ import { useForm, Controller } from "react-hook-form";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-import FormBase, { FormRow } from "../../features/MediaForms/FormBase";
+import FormBase, {
+  FormRow,
+  UploadRow,
+} from "../../features/MediaForms/FormBase";
 import FormInput from "../../ui/SimpleComponents/FormInput";
 import FormLabel from "../../ui/SimpleComponents/FormLabel";
 import FormTextarea from "../../ui/SimpleComponents/FormTextarea";
@@ -16,21 +19,28 @@ import {
 
 import useArtists from "../../hooks/useArtists";
 import SaveButton from "../../ui/Buttons/SaveButton";
-import useToast from "../../hooks/useToast";
 import useCreateAlbums from "../../hooks/useCreateAlbums";
+import { dateToISO } from "../../helpers/helpers";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 function CreateAlbum() {
   const { data: artists } = useArtists();
-  const { createAnAlbum } = useCreateAlbums();
+  const { createAnAlbum, isCreating } = useCreateAlbums();
+  const navigate = useNavigate();
+
+  function handleNavigate(e) {
+    e.preventDefault();
+    navigate(`/create/artist`);
+  }
 
   const {
     register,
     handleSubmit,
     control,
-
+    reset,
     formState: { errors, isSubmitting, isSubmitSuccessful },
-  } = useForm();
+  } = useForm({ defaultValues: { type: "album" } });
 
   const onError = (errors) => {
     // Find the first error and toast it
@@ -44,7 +54,7 @@ function CreateAlbum() {
 
   const onSubmit = (data) => {
     const formattedData = {
-      release_date: data.releaseDate.toISOString().split("T")[0],
+      release_date: dateToISO(data.releaseDate),
       artist_id: data.artistId.value,
       title: data.albumTitle,
       description: data.description,
@@ -59,7 +69,11 @@ function CreateAlbum() {
       type: data.type,
     };
 
-    createAnAlbum(formattedData);
+    createAnAlbum(formattedData, {
+      onSuccess: () => {
+        reset();
+      },
+    });
   };
 
   return (
@@ -119,10 +133,16 @@ function CreateAlbum() {
         )}
       />
       <FormRow $area="navigateBtn">
-        <p style={{ fontSize: "1.2rem", color: "var(--text-secondary-500)" }}>
+        <p style={{ fontSize: "1.4rem", color: "var(--text-secondary-500)" }}>
           Don't have an artist?
         </p>
-        <SaveButton size="small">Create one</SaveButton>
+        <SaveButton
+          size="medium"
+          disabled={isCreating}
+          onClick={(e) => handleNavigate(e)}
+        >
+          Create one
+        </SaveButton>
       </FormRow>
       <FormRow $area="description">
         <FormLabel htmlFor="description">Description</FormLabel>
@@ -141,19 +161,20 @@ function CreateAlbum() {
         name="file"
         defaultValue={null}
         render={({ field }) => (
-          <FormRow $area="upload">
+          <UploadRow>
             <FormUploadMedia
               id="file"
               value={field.value}
-              // To access the File Node, we have to pass the event then take the first element
               onChange={(e) => field.onChange(e.target.files[0])}
             />
-          </FormRow>
+          </UploadRow>
         )}
       />
 
       <FormRow $area="submit">
-        <SaveButton type="submit">Upload</SaveButton>
+        <SaveButton type="submit" disabled={isCreating}>
+          Upload
+        </SaveButton>
         <input type="hidden" id="type" value="album" {...register("type")} />
       </FormRow>
     </FormBase>

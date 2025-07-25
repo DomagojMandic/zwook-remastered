@@ -1,15 +1,18 @@
 import { useParams } from "react-router";
 import ContentHeader from "../../ui/ContentHeader/ContentHeader";
 import CreateAlbum from "./CreateAlbum";
+import CreateArtist from "./CreateArtist";
 
 const formMap = {
-  artist: "CreateAlbum",
+  artist: CreateArtist,
   album: CreateAlbum,
   song: "CreateSong",
 };
 
 function MediaForm() {
   const { type } = useParams();
+
+  console.log(type);
 
   const allowedTypes = ["artist", "album", "song"];
   if (!allowedTypes.includes(type)) {

@@ -1,6 +1,7 @@
 import supabase, { SUPABASE_URL } from "./supabase";
 
-const ARTIST_BUCKET = "/storage/v1/object/public/images/covers/albums/";
+/* Not used for uploading!!!! */
+const ALBUM_BUCKET = "/storage/v1/object/public/images/covers/albums/";
 
 /**
  * Fetches all albums from the database.
@@ -41,23 +42,59 @@ export async function getAlbumById(id) {
   return album;
 }
 
-export async function createAlbum(albumData) {
-  /* Creating a full image URL. Replace all "/" so it doesn't create
-     another nested folder */
-  const imageName = albumData.coverName.replaceAll("/", "");
-  const imageUrl = `${SUPABASE_URL + ARTIST_BUCKET + imageName}`;
+export async function deleteAlbum(id) {
+  const { error } = await supabase.from("albums").delete().eq("id", id);
 
-  console.log("ImageURL: ", imageUrl, { ...albumData, coverUrl: imageUrl });
-
-  /* const { data, error } = await supabase
-    .from("albums")
-    .insert([{ ...albumData, coverUrl: imageUrl }])
-    .select(); */
-
-  console.log("dođe li do ovdje?");
   if (error) {
-    throw new Error(`Error while creating album. Please try again later.`);
+    throw new Error(`Error while deleting album: ${error.message}`);
+  }
+}
+
+/**
+ * Creates a new album in the database and uploads cover image to Supabase storage.
+ *
+ * Creating a full image URL. Replace all "/" so it doesn't create
+ * another nested folder in the storage bucket. We spread the data
+ * from the albumData to upload without the coverName and the uploaded
+ * file.
+ *
+ * @param {Object} albumData - Data for the new album including the image file
+ * @returns {Promise<Object>} Created album object
+ * @throws {Error} If database insert or image upload fails
+ */
+export async function createAlbum(albumData) {
+  const { file, coverName, ...rest } = albumData;
+
+  // Remove slashes from file name to prevent nested folders
+  const imageName = coverName.replaceAll("/", "");
+
+  // Build public image URL for storage (used in DB only)
+  const imageUrl = `${SUPABASE_URL}${ALBUM_BUCKET}${imageName}`;
+
+  // Prepare album data to insert as a row (without file)
+  const uploadData = {
+    ...rest,
+    cover_url: imageUrl,
+  };
+
+  // Insert album data into the database
+  const { data: albums, error: albumError } = await supabase
+    .from("albums")
+    .insert([uploadData])
+    .select();
+
+  if (albumError) {
+    throw new Error("Error while creating album. Please try again.");
   }
 
-  return data;
+  // Upload image to Supabase storage under 'images/covers/albums/imageName'
+  const { error: imageError } = await supabase.storage
+    .from("images") // The bucket name
+    .upload(`covers/albums/${imageName}`, file);
+
+  /* If image upload fails, delete the album and throw an error */
+  if (imageError) {
+    deleteAlbum(albums[0].id);
+    throw new Error(`Image upload failed and the album was not created`);
+  }
 }
