@@ -144,8 +144,6 @@ export async function createSong(songData) {
     audio_url: audioURL,
   };
 
-  console.log(uploadData);
-
   // Insert song data into the database
   const { data: songs, error: songError } = await supabase
     .from("songs")

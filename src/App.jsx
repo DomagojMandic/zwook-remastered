@@ -12,14 +12,13 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import GlobalStyles from "./styles/GlobalStyles";
 
 /* Critical path components - NO lazy loading */
-import Dashboard from "./pages/Dashboard/Dashboard";
 import Login from "./pages/Login/Login";
 import AppLayout from "./ui/AppLayout/AppLayout";
-import MediaForm from "./pages/MediaForm/MediaForm";
 import { Toaster } from "react-hot-toast";
 import { toasterOptions } from "./data/toasterOptions";
 
 /* Lazy loaded components */
+const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
 const Devices = lazy(() => import("./pages/Devices/Devices"));
 const Subscriptions = lazy(() => import("./pages/Subscriptions/Subscriptions"));
 const Settings = lazy(() => import("./pages/Settings/Settings"));
@@ -32,6 +31,7 @@ const Stations = lazy(() => import("./pages/Stations/Stations"));
 const Podcasts = lazy(() => import("./pages/Podcasts/Podcasts"));
 const CreatePodcasts = lazy(() => import("./pages/Podcasts/CreatePodcasts"));
 const MediaItemPage = lazy(() => import("./pages/MediaItemPage/MediaItemPage"));
+const MediaForm = lazy(() => import("./pages/MediaForm/MediaForm"));
 
 const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
@@ -39,6 +39,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <AppLayout />,
+
     children: [
       {
         index: true,
@@ -53,7 +54,6 @@ const router = createBrowserRouter([
       { path: "artists", element: <Artists /> },
       { path: "stations", element: <Stations /> },
       { path: "podcasts", element: <CreatePodcasts /> },
-      { path: "artists", element: <Artists /> },
       {
         path: "create",
         children: [
