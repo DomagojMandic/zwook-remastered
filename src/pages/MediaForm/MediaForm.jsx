@@ -2,11 +2,12 @@ import { useParams } from "react-router";
 import ContentHeader from "../../ui/ContentHeader/ContentHeader";
 import CreateAlbum from "./CreateAlbum";
 import CreateArtist from "./CreateArtist";
+import CreateSong from "./CreateSong";
 
 const formMap = {
   artist: CreateArtist,
   album: CreateAlbum,
-  song: "CreateSong",
+  song: CreateSong,
 };
 
 function MediaForm() {

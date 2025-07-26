@@ -1,4 +1,7 @@
-import supabase from "./supabase";
+import { editFileName } from "../helpers/helpers";
+import supabase, { SUPABASE_URL } from "./supabase";
+
+const SONG_BUCKET = "/storage/v1/object/public/audio/songs/";
 
 /**
  * Fetches all songs from the database with album cover URLs.
@@ -105,4 +108,63 @@ export async function getSongsByTypeAndId(type, id) {
   });
 
   return flattenedSongs;
+}
+
+export async function deleteSong(id) {
+  const { data, error } = await supabase
+    .from("songs")
+    .delete()
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(`Error while deleting song: ${error.message}`);
+  }
+
+  return data;
+}
+
+/**
+ * Creates a new song in the database and uploads the audio file to Supabase storage.
+ *
+ * @param {Object} songData - Data for the new song including the audio file
+ * @returns {Promise<Object>} Created song object
+ * @throws {Error} If database insert or audio upload fails
+ */
+export async function createSong(songData) {
+  const { file, fileName, ...rest } = songData;
+
+  const clearFileName = editFileName(fileName);
+
+  const audioURL = `${SUPABASE_URL}${SONG_BUCKET}${clearFileName}`;
+
+  const uploadData = {
+    ...rest,
+    audio_url: audioURL,
+  };
+
+  console.log(uploadData);
+
+  // Insert song data into the database
+  const { data: songs, error: songError } = await supabase
+    .from("songs")
+    .insert([uploadData])
+    .select();
+
+  if (songError) {
+    throw new Error("Error while creating song. Please try again.");
+  }
+
+  // Upload audio file to Supabase storage
+  const { error: audioError } = await supabase.storage
+    .from("songs")
+    .upload(`/${clearFileName}`, file);
+
+  if (audioError) {
+    deleteSong(songs[0].id);
+    throw new Error(`Audio upload failed and the song was not created`);
+  }
+
+  return songs[0];
 }

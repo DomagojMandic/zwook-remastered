@@ -3,8 +3,13 @@ import {
   IoCloudUploadOutline,
   IoClose,
   IoCheckmarkCircle,
+  IoMusicalNotes,
+  IoImage,
+  IoDocument,
 } from "react-icons/io5";
 import { useState } from "react";
+import { FILE_TYPE_CONFIGS } from "../../data/formUploadFormat";
+import { formatFileSize, getAudioDuration } from "../../helpers/helpers";
 
 const StyledFormUpload = styled.label`
   min-height: 12rem;
@@ -41,7 +46,7 @@ const StyledFormUpload = styled.label`
 
 StyledFormUpload.Input = styled.input.attrs((props) => ({
   type: "file",
-  accept: props.accept || ".png, .jpg, .jpeg",
+  accept: props.accept,
   "aria-label": "Upload file",
 }))`
   display: none;
@@ -164,41 +169,88 @@ const EmptyPreview = styled.div`
   font-size: 1.1rem;
 `;
 
+const FileTypeIcon = styled.div`
+  font-size: 3rem;
+  color: var(--text-secondary-300);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 function FormUploadMedia({
+  // File type configuration - can be 'image', 'audio', 'document', 'video' or custom object
+  fileType = "image",
+
+  // Custom configuration (overrides fileType if provided)
   accept,
+  label,
+  description,
+  showPreview,
+
+  // Standard props
   id = "upload",
-  label = "Click to upload",
-  description = "SVG, PNG, JPEG, TIFF or GIF",
   onChange,
   multiple = false,
   value,
 }) {
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  // Format file size
-  const formatFileSize = (bytes) => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+  // Get configuration based on fileType or use custom props
+  let config;
+  if (typeof fileType === "string" && FILE_TYPE_CONFIGS[fileType]) {
+    config = FILE_TYPE_CONFIGS[fileType];
+  } else if (typeof fileType === "object") {
+    config = fileType;
+  } else {
+    config = FILE_TYPE_CONFIGS.image; // fallback
+  }
+
+  // Override config with custom props if provided
+  const finalConfig = {
+    accept: accept || config.accept,
+    label: label || config.label,
+    description: description || config.description,
+    showPreview: showPreview !== undefined ? showPreview : config.showPreview,
+    emptyIcon: config.emptyIcon,
+    uploadIcon: config.uploadIcon,
+  };
+
+  // Check if file is supported for preview
+  const canShowPreview = (file) => {
+    return finalConfig.showPreview && file.type.startsWith("image/");
   };
 
   // Handle file change
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
 
     if (file) {
-      // Create preview URL for images
-      if (file.type.startsWith("image/")) {
+      // Create preview URL for supported files
+      if (canShowPreview(file)) {
         const url = URL.createObjectURL(file);
         setPreviewUrl(url);
       } else {
         setPreviewUrl(null);
       }
+
+      // Add duration to audio files
+      if (file.type.startsWith("audio/")) {
+        const duration = await getAudioDuration(file);
+        // Create enhanced file object with duration
+        const enhancedFile = Object.assign(file, { duration });
+
+        // Create synthetic event with enhanced file
+        const syntheticEvent = {
+          target: {
+            files: [enhancedFile],
+          },
+        };
+        onChange(syntheticEvent);
+        return;
+      }
     }
 
-    // Call parent onChange
+    // Call parent onChange for non-audio files
     onChange(e);
   };
 
@@ -222,32 +274,42 @@ function FormUploadMedia({
     onChange(syntheticEvent);
   };
 
+  // Get appropriate icon for file type in preview
+  const getFileTypeIcon = (file) => {
+    if (file.type.startsWith("image/")) return <IoImage />;
+    if (file.type.startsWith("audio/")) return <IoMusicalNotes />;
+    return <IoDocument />;
+  };
+
   const hasFile = value && value.name;
-  const isImage = hasFile && value.type.startsWith("image/");
+  const shouldShowImagePreview = hasFile && canShowPreview(value) && previewUrl;
+
+  const EmptyIcon = finalConfig.emptyIcon;
+  const UploadIcon = finalConfig.uploadIcon;
 
   return (
     <>
       <StyledFormUpload htmlFor={id} $hasFile={hasFile}>
         <StyledFormUpload.Input
           id={id}
-          accept={accept}
+          accept={finalConfig.accept}
           onChange={handleFileChange}
           multiple={multiple}
         />
 
         <StyledFormUpload.IconWrapper $hasFile={hasFile}>
-          {hasFile ? <IoCheckmarkCircle /> : <IoCloudUploadOutline />}
+          {hasFile ? <IoCheckmarkCircle /> : <UploadIcon />}
         </StyledFormUpload.IconWrapper>
 
         <StyledFormUpload.LabelText $hasFile={hasFile}>
           {hasFile
             ? "File uploaded successfully!"
-            : `${label} or drag and drop`}
+            : `${finalConfig.label} or drag and drop`}
         </StyledFormUpload.LabelText>
 
         {!hasFile && (
           <StyledFormUpload.Description>
-            {description}
+            {finalConfig.description}
           </StyledFormUpload.Description>
         )}
       </StyledFormUpload>
@@ -255,9 +317,11 @@ function FormUploadMedia({
       <FilePreview $hasFile={hasFile}>
         {hasFile ? (
           <>
-            {isImage && previewUrl && (
+            {shouldShowImagePreview ? (
               <PreviewImage src={previewUrl} alt="Preview" />
-            )}
+            ) : hasFile ? (
+              <FileTypeIcon>{getFileTypeIcon(value)}</FileTypeIcon>
+            ) : null}
 
             <FileInfo>
               <FileName title={value.name}>{value.name}</FileName>
@@ -270,7 +334,7 @@ function FormUploadMedia({
           </>
         ) : (
           <EmptyPreview>
-            <IoCloudUploadOutline size={48} />
+            <EmptyIcon size={48} />
             <span>File preview will appear here</span>
           </EmptyPreview>
         )}
