@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { formatTime, parseCustomDate } from "../../helpers/helpers";
 
 const TitleContainer = styled.div`
   display: flex;
@@ -33,6 +34,7 @@ const SongContent = styled.span`
 `;
 
 function PlaylistRowItem({ item, index }) {
+  console.log(item);
   return (
     <>
       <SongContent>{index + 1}</SongContent>
@@ -46,8 +48,8 @@ function PlaylistRowItem({ item, index }) {
         </TitleWrapper>
       </TitleContainer>
       <SongContent>{item.album}</SongContent>
-      <SongContent>{item.dateAdded}</SongContent>
-      <SongContent>{item.duration}</SongContent>
+      <SongContent>{parseCustomDate(item.created_at)}</SongContent>
+      <SongContent>{formatTime(item.duration)}</SongContent>
     </>
   );
 }

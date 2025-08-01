@@ -1,7 +1,7 @@
 import { editFileName } from "../helpers/helpers";
 import supabase, { SUPABASE_URL } from "./supabase";
 
-const SONG_BUCKET = "/storage/v1/object/public/audio/songs/";
+const SONG_BUCKET = "/storage/v1/object/public/songs/";
 
 /**
  * Fetches all songs from the database with album cover URLs.

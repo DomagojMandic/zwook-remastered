@@ -16,6 +16,7 @@ import Login from "./pages/Login/Login";
 import AppLayout from "./ui/AppLayout/AppLayout";
 import { Toaster } from "react-hot-toast";
 import { toasterOptions } from "./data/toasterOptions";
+import AudioPlayer from "./features/AudioPlayer/AudioPlayer";
 
 /* Lazy loaded components */
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
@@ -81,6 +82,7 @@ function App() {
       <GlobalStyles />
       <RouterProvider router={router} />
       <Toaster {...toasterOptions} />
+      <AudioPlayer />
     </QueryClientProvider>
   );
 }

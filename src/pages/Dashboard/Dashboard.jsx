@@ -21,6 +21,27 @@ const StyledBannerContainer = styled.div`
   padding-right: clamp(1rem, 2.5vw, 4rem);
   margin-top: 3rem;
   margin-bottom: 3rem;
+
+  @media (max-width: 991px) {
+    gap: 2rem;
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 480px) {
+    gap: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-left: clamp(0.75rem, 2vw, 1.5rem);
+    padding-right: clamp(0.75rem, 2vw, 1.5rem);
+  }
 `;
 
 const featuredButtons = [

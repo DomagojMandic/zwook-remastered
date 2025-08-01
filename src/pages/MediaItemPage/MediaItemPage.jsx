@@ -32,6 +32,7 @@ function MediaTestPage() {
     error,
   } = useMediaItem(type, numberId);
 
+  /* Used for forwarding information to the child */
   const mediaData = {
     currentItem,
     type,

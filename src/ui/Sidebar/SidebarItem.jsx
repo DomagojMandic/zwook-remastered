@@ -6,11 +6,11 @@ function SidebarItem({ label, icon, path, notification }) {
     <StyledList.Item>
       <StyledList.NavLink to={path}>
         <StyledIcon>{icon}</StyledIcon>
-
         <StyledList.Label>{label}</StyledList.Label>
         {notification && (
           <StyledList.Notification>{notification}</StyledList.Notification>
         )}
+        <StyledList.Tooltip className="tooltip">{label}</StyledList.Tooltip>
       </StyledList.NavLink>
     </StyledList.Item>
   );

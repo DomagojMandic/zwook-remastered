@@ -52,3 +52,40 @@ export const editFileName = (fileName) => {
     .replace(/\s+/g, "-") // Change spaces with -
     .replace(/[^a-z0-9.-]/g, ""); // Remove everything except letters, numbers, dots, and dashes
 };
+
+// Time formatting utility
+export const formatTime = (time) => {
+  if (!time || isNaN(time)) return "0:00";
+  const minutes = Math.floor(time / 60);
+  const seconds = Math.floor(time % 60);
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+};
+
+/**
+ * Parses a custom date string in the format "YYYY-MM-DD HH:mm:ss.ssssss+TZ"
+ * into a JavaScript Date object.
+ *
+ * Replaces the space between date and time with 'T' and removes
+ * microseconds (the part after the decimal point).
+ * Returns null if the input is invalid or cannot be parsed.
+ *
+ * It is used when formatting created_at dates from the API
+ *
+ * @param {string} dateStr - Date string in the custom format.
+ * @returns {Date|null} Parsed Date object or null if invalid.
+ */
+export function parseCustomDate(dateStr) {
+  if (!dateStr) return null;
+
+  const cleaned = dateStr.replace(" ", "T").replace(/\.\d+/, "");
+
+  const date = new Date(cleaned);
+
+  if (isNaN(date)) return null;
+
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  const year = date.getFullYear();
+
+  return `${day}.${month}.${year}`;
+}

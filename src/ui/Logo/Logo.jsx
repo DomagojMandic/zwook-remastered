@@ -10,10 +10,8 @@ const StyledLogo = styled.img`
   margin-right: 1.5rem;
   object-fit: contain;
 
-  @media (max-width: 600px) {
-    max-width: 120px;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
+  @media (max-width: 991px) {
+    display: none;
   }
 `;
 
