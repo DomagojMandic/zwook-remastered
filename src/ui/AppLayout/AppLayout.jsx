@@ -1,10 +1,9 @@
 import { Outlet } from "react-router-dom";
-import StyledSidebar from "../Sidebar/StyledSidebar";
+import { Suspense } from "react";
 import StyledAppLayout from "./StyledAppLayout";
 import Sidebar from "../Sidebar/Sidebar";
 import StyledMain from "../Main/StyledMain";
 import Header from "../Header/Header";
-import { Suspense } from "react";
 import LoadingSuspense from "../SuspenseComponents/Suspense";
 
 function AppLayout() {

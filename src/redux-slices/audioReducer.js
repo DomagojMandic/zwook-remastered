@@ -179,7 +179,12 @@ const audioSlice = createSlice({
         // 2. Loads new audio file
         // 3. Auto-plays the new song
       }
-      // NO: We're at the end of playlist, do nothing
+      // NO: We're at the end of playlist, play the first song again
+      if (currentIndex === state.playlist.length - 1) {
+        state.currentTrack = state.playlist[0]; // First song becomes current
+        state.currentTime = 0; // Reset to beginning
+        state.isPlaying = false; // Will be set to true when it starts playing
+      }
     },
 
     // PREVIOUS TRACK: Move to previous song in playlist
@@ -197,7 +202,14 @@ const audioSlice = createSlice({
         state.currentTime = 0; // Reset to beginning
         state.isPlaying = false; // Will be set to true when it starts playing
       }
-      // NO: We're at the beginning of playlist, do nothing
+      // NO: We're at the beginning of playlist so go to the last song
+
+      if (currentIndex === 0 && state.playlist.length > 0) {
+        // If we're at the first song, go to the last song in the playlist
+        state.currentTrack = state.playlist[state.playlist.length - 1]; // Last song becomes current
+        state.currentTime = 0; // Reset to beginning
+        state.isPlaying = false; // Will be set to true when it starts playing
+      }
     },
   },
 });

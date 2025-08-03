@@ -16,6 +16,7 @@ import {
   FaChevronUp,
   FaChevronDown,
 } from "react-icons/fa";
+import { GiPreviousButton, GiNextButton } from "react-icons/gi";
 import StyledAudioPlayer from "./StyledAudioPlayer";
 import {
   loadTrack, // Action to load track (not used here, but imported)
@@ -28,6 +29,7 @@ import {
   toggleMute, // Action to toggle mute
   toggleMinimize, // Action to toggle minimize
   nextTrack, // Action to go to next song
+  previousTrack, // Action to go to next song
 } from "../../redux-slices/audioReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { formatTime } from "../../helpers/helpers";
@@ -544,15 +546,23 @@ const AudioPlayer = () => {
               {currentTrack.title || "Unknown Track"}
             </StyledAudioPlayer.TrackTitle>
             <StyledAudioPlayer.TrackArtist>
-              {currentTrack.artist || "Unknown Artist"}
+              {currentTrack.artist_title || "Unknown Artist"}
             </StyledAudioPlayer.TrackArtist>
           </StyledAudioPlayer.TrackDetails>
         </StyledAudioPlayer.TrackInfo>
 
         {/* PLAYER CONTROLS SECTION */}
         <StyledAudioPlayer.PlayerControls>
-          {/* PLAY/PAUSE BUTTON */}
+          {/* PLAY/PAUSE BUTTON WITH PREVIOUS/NEXT TRACK */}
           <StyledAudioPlayer.ControlButtons>
+            {playlist.length > 1 && (
+              <StyledAudioPlayer.PlayButton
+                onClick={() => dispatch(previousTrack())}
+                disabled={isLoadingAudio} // Disable while loading
+              >
+                <GiPreviousButton />
+              </StyledAudioPlayer.PlayButton>
+            )}
             <StyledAudioPlayer.PlayButton
               onClick={handlePlayPause}
               disabled={isLoadingAudio} // Disable while loading
@@ -565,6 +575,14 @@ const AudioPlayer = () => {
                 <FaPlay /> // Show play if paused
               )}
             </StyledAudioPlayer.PlayButton>
+            {playlist.length > 1 && (
+              <StyledAudioPlayer.PlayButton
+                onClick={() => dispatch(nextTrack())}
+                disabled={isLoadingAudio} // Disable while loading
+              >
+                <GiNextButton />
+              </StyledAudioPlayer.PlayButton>
+            )}
           </StyledAudioPlayer.ControlButtons>
 
           {/* PROGRESS BAR SECTION */}

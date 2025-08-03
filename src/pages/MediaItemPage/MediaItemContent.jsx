@@ -18,7 +18,7 @@ import {
   playTrack, // Action to resume playing
   pauseTrack, // Action to pause
 } from "../../redux-slices/audioReducer";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { formatTime } from "../../helpers/helpers";
 
 // COMPONENT PROPS STRUCTURE:
@@ -46,7 +46,6 @@ function MediaItemContent({
 
   // REDUX: Get dispatch function to send actions
   const dispatch = useDispatch();
-
   // REDUX: Get current audio state from store
   const audioState = useSelector((state) => state.audio);
 
@@ -57,6 +56,7 @@ function MediaItemContent({
   // ===================================================================
   // MAIN PLAY HANDLER
   // ===================================================================
+
   function handlePlay() {
     // STEP 1: Get current state information
     const currentTrackId = audioState.currentTrack?.id; // What song is currently loaded?

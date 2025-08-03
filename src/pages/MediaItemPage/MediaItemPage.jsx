@@ -12,6 +12,7 @@ import PlaylistRowItem from "../PlaylistDetails/PlaylistIRowItem";
 
 import useMediaItem from "../../hooks/useMediaItem";
 import MediaItemContent from "./MediaItemContent";
+import ErrorPage from "../Errors/Error";
 
 function MediaTestPage() {
   // Will be 0 or the already rated value later on
@@ -75,7 +76,9 @@ function MediaTestPage() {
   }
 
   // Error/fallback state
-  return null;
+  return (
+    <ErrorPage message="Media not found. Please check the URL or go back." />
+  );
 }
 
 export default MediaTestPage;

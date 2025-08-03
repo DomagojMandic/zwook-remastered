@@ -17,6 +17,7 @@ import AppLayout from "./ui/AppLayout/AppLayout";
 import { Toaster } from "react-hot-toast";
 import { toasterOptions } from "./data/toasterOptions";
 import AudioPlayer from "./features/AudioPlayer/AudioPlayer";
+import ErrorPage from "./pages/Errors/Error";
 
 /* Lazy loaded components */
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
@@ -70,6 +71,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+  { path: "*", element: <ErrorPage /> },
 ]);
 
 // React Query Client and other providers can be added here if needed

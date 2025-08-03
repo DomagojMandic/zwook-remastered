@@ -6,7 +6,7 @@ import styled from "styled-components";
 import formInputs from "../../data/podcastInputs";
 import { createInput } from "../../services/podcastForm";
 import FormUpload from "../../ui/SimpleComponents/FormUpload";
-import { imageFormatAccepted } from "../../data/formUploadFormat";
+import { FILE_TYPE_CONFIGS } from "../../data/formUploadFormat";
 import { useRef } from "react";
 
 const StyledFormContainer = styled.div`
@@ -66,7 +66,7 @@ function CreatePodcasts() {
           </StyledFormContainer>
           <StyledFormContainer $flexShrink={2}>
             <FormUpload
-              accept={imageFormatAccepted}
+              accept={FILE_TYPE_CONFIGS.image.accept}
               id="formImageUpload"
               ref={fileInputRef}
             />

@@ -1,15 +1,5 @@
 import styled, { keyframes } from "styled-components";
-
-// Keyframes for animations
-const spin = keyframes`
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-`;
-
-const fadeIn = keyframes`
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-`;
+import { spin, fadeIn } from "../../ui/Animations/audioAnimations";
 
 // Main container
 const StyledAudioPlayer = styled.div`
@@ -132,7 +122,7 @@ StyledAudioPlayer.TrackDetails = styled.div`
 // Track title
 StyledAudioPlayer.TrackTitle = styled.h4`
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: var(--text-primary-300);
   white-space: nowrap;
@@ -148,7 +138,7 @@ StyledAudioPlayer.TrackTitle = styled.h4`
 // Track artist
 StyledAudioPlayer.TrackArtist = styled.p`
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: 1.1rem;
   color: var(--text-secondary-300);
   white-space: nowrap;
   overflow: hidden;
@@ -241,7 +231,7 @@ StyledAudioPlayer.ProgressContainer = styled.div`
 
 // Time display
 StyledAudioPlayer.TimeDisplay = styled.span`
-  font-size: 0.75rem;
+  font-size: 1.2rem;
   color: var(--text-secondary-300);
   min-width: 38px;
   text-align: center;

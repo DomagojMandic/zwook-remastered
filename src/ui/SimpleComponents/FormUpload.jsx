@@ -49,8 +49,8 @@ StyledFormUpload.Description = styled.p`
 const FormUpload = forwardRef(({ accept, id, ...props }, ref) => {
   return (
     <>
-      <StyledFormUpload htmlFor={inputId} ref={ref}>
-        <StyledFormUpload.Input accept={accept} id={inputId} {...props} />
+      <StyledFormUpload htmlFor={id} ref={ref}>
+        <StyledFormUpload.Input accept={accept} id={id} {...props} />
         <StyledFormUpload.IconWrapper>
           <IoCloudUploadOutline />
         </StyledFormUpload.IconWrapper>

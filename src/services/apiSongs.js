@@ -10,10 +10,12 @@ const SONG_BUCKET = "/storage/v1/object/public/songs/";
  * @returns {Promise<Array>} Array of song objects with cover_url property
  * @throws {Error} If database query fails
  */
+
 export async function getSongs() {
   const { data: songs, error } = await supabase.from("songs").select(`
       *,
-      albums(cover_url)
+      albums(cover_url),
+      artists!artist_id(title)
     `);
 
   if (error) {
@@ -21,15 +23,16 @@ export async function getSongs() {
     throw new Error("Error while fetching songs:", error.message);
   }
 
-  // Flattens the object and adds cover_url directly to the song
+  // Flattens the object and adds cover_url + artist title directly to the song
   const flattenedSongs = songs.map((song) => {
-    const { albums, ...songData } = song;
+    const { albums, artists, ...songData } = song;
     return {
       ...songData,
       cover_url: albums?.cover_url || null,
+      artist_title: artists?.title || null, // Samo naziv artista
     };
   });
-
+  // Return the flattened array of songs
   return flattenedSongs;
 }
 
@@ -47,7 +50,8 @@ export async function getSongById(id) {
     .from("songs")
     .select(
       `*,
-      albums(cover_url)
+      albums(cover_url),
+      artists!artist_id(title)
     `
     )
     .eq("id", id)
@@ -57,11 +61,12 @@ export async function getSongById(id) {
     throw new Error(`Error while fetching song by ID: ${error.message}`);
   }
 
-  // Flatten the object and add cover_url directly to the song
-  const { albums, ...songData } = song;
+  // Flatten the object and add cover_url + artist title directly to the song
+  const { albums, artists, ...songData } = song;
   const flattenedSong = {
     ...songData,
     cover_url: albums?.cover_url || null,
+    artist_title: artists?.title || null,
   };
 
   return flattenedSong;
@@ -77,7 +82,9 @@ export async function getSongById(id) {
  * @throws {Error} If type is invalid or database query fails
  */
 export async function getSongsByTypeAndId(type, id) {
-  let query = supabase.from("songs").select("*, albums(cover_url)");
+  let query = supabase
+    .from("songs")
+    .select("*, albums(cover_url), artists!artist_id(title)"); // ← Dodana zatvorena zagrada
 
   switch (type) {
     case "album":
@@ -98,12 +105,13 @@ export async function getSongsByTypeAndId(type, id) {
     );
   }
 
-  // Flatten the objects and add cover_url directly to each song
+  // Flatten the objects and add cover_url + artist title directly to each song
   const flattenedSongs = songs.map((song) => {
-    const { albums, ...songData } = song;
+    const { albums, artists, ...songData } = song;
     return {
       ...songData,
       cover_url: albums?.cover_url || null,
+      artist_title: artists?.title || null,
     };
   });
 
