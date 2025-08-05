@@ -9,6 +9,7 @@ const StyledLogo = styled.img`
   margin-left: 1.5rem;
   margin-right: 1.5rem;
   object-fit: contain;
+  display: block;
 
   @media (max-width: 991px) {
     display: none;
