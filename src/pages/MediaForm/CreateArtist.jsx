@@ -11,8 +11,7 @@ import FormTextarea from "../../ui/SimpleComponents/FormTextarea";
 import FormUploadMedia from "../../ui/SimpleComponents/FormUploadMedia";
 import SaveButton from "../../ui/Buttons/SaveButton";
 
-import { dateToISO } from "../../helpers/helpers";
-import toast from "react-hot-toast";
+import { onError } from "../../utils/formErrors";
 import useCreateArtists from "../../hooks/useCreateArtists";
 
 const gridColumnAreas = `"title navigateBtn"
@@ -37,16 +36,6 @@ function CreateArtist() {
     reset,
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm();
-
-  const onError = (errors) => {
-    // Find the first error and toast it
-    const firstError = Object.values(errors)[0];
-    if (firstError) {
-      toast.error(firstError.message, {
-        position: "bottom-center",
-      });
-    }
-  };
 
   const onSubmit = (data) => {
     const formattedData = {

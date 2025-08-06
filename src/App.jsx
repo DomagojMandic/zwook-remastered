@@ -12,12 +12,14 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import GlobalStyles from "./styles/GlobalStyles";
 
 /* Critical path components - NO lazy loading */
-import Login from "./pages/Login/Login";
+import Login from "./pages/Auth/Login";
 import AppLayout from "./ui/AppLayout/AppLayout";
 import { Toaster } from "react-hot-toast";
 import { toasterOptions } from "./data/toasterOptions";
 import AudioPlayer from "./features/AudioPlayer/AudioPlayer";
 import ErrorPage from "./pages/Errors/Error";
+import AuthProvider from "./contexts/AuthContext";
+import Register from "./pages/Auth/Register";
 
 /* Lazy loaded components */
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
@@ -36,11 +38,30 @@ const MediaItemPage = lazy(() => import("./pages/MediaItemPage/MediaItemPage"));
 const MediaForm = lazy(() => import("./pages/MediaForm/MediaForm"));
 
 const router = createBrowserRouter([
-  { path: "/login", element: <Login /> },
+  {
+    path: "/login",
+    element: (
+      <AuthProvider>
+        <Login />
+      </AuthProvider>
+    ),
+  },
+  {
+    path: "/register",
+    element: (
+      <AuthProvider>
+        <Register />
+      </AuthProvider>
+    ),
+  },
 
   {
     path: "/",
-    element: <AppLayout />,
+    element: (
+      <AuthProvider>
+        <AppLayout />
+      </AuthProvider>
+    ),
 
     children: [
       {

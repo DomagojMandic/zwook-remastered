@@ -10,6 +10,7 @@ import { renderFeaturedItem } from "../../utils/renderFeaturedItem";
 
 import useSongs from "../../hooks/useSongs";
 import useAlbums from "../../hooks/useAlbums";
+import defaultUserData from "../../data/userCreationConfig";
 
 const StyledBannerContainer = styled.div`
   display: flex;
@@ -57,6 +58,7 @@ const categoriesButtons = [
 /* We provide a Context for each FeaturedSection with defined customHook, children, 
 title and an array of button Components to Render */
 function Dashboard() {
+  console.log(defaultUserData);
   return (
     <>
       <StyledBannerContainer>

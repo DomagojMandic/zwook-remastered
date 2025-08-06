@@ -21,7 +21,8 @@ import useArtists from "../../hooks/useArtists";
 import SaveButton from "../../ui/Buttons/SaveButton";
 import useCreateAlbums from "../../hooks/useCreateAlbums";
 import { dateToISO } from "../../helpers/helpers";
-import toast from "react-hot-toast";
+import { onError } from "../../utils/formErrors";
+
 import { useNavigate } from "react-router";
 
 function CreateAlbum() {
@@ -41,16 +42,6 @@ function CreateAlbum() {
     reset,
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm({ defaultValues: { type: "album" } });
-
-  const onError = (errors) => {
-    // Find the first error and toast it
-    const firstError = Object.values(errors)[0];
-    if (firstError) {
-      toast.error(firstError.message, {
-        position: "bottom-center",
-      });
-    }
-  };
 
   const onSubmit = (data) => {
     const formattedData = {
