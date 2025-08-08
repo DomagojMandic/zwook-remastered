@@ -12,7 +12,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           "react-vendor": ["react", "react-dom", "react-router-dom"],
-          "ui-vendor": ["styled-components"],
+          "ui-vendor": ["styled-components", "react-hot-toast"],
           icons: [
             "react-icons/fa",
             "react-icons/md",
@@ -20,12 +20,19 @@ export default defineConfig({
             "react-icons/io",
           ],
           query: ["@tanstack/react-query", "@tanstack/react-query-devtools"],
+          forms: ["react-hook-form", "react-datepicker", "react-select"],
         },
       },
     },
   },
   optimizeDeps: {
-    include: ["react", "react-dom", "react-router-dom", "styled-components"],
+    include: [
+      "react",
+      "react-dom",
+      "react-router-dom",
+      "styled-components",
+      "@supabase/supabase-js",
+    ],
     exclude: ["@tanstack/react-query-devtools"],
   },
   server: {

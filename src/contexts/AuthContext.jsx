@@ -4,12 +4,14 @@ import { useLocation, useNavigate } from "react-router";
 import { AUTH_CONFIG } from "../data/authConfig";
 import defaultUserData from "../data/userCreationConfig";
 import toast from "react-hot-toast";
-import { createUser } from "../services/apiUsers";
+import { createUser, signInUser } from "../services/apiUsers";
+import { useLocalStorageState } from "../hooks/useLocalStorageState";
 
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  /* Getting information from local storage upon initial render */
+  const [user, setUser] = useLocalStorageState(null, "user");
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -19,7 +21,6 @@ function AuthProvider({ children }) {
 
   const registerUser = async (userData) => {
     try {
-      console.log("zašto ne radiš");
       // Receives the user data from the register form and combines it with
       // default user data to create a new user in the database
       const { fullName: full_name, email, password } = userData;
@@ -28,16 +29,31 @@ function AuthProvider({ children }) {
 
       const createdUser = await createUser(signUpData);
 
-      setUser(createdUser);
-      toast.success("User created successfully!");
-      console.log(createdUser);
-
+      if (createdUser) {
+        setUser(createdUser);
+        localStorage.setItem("user", createdUser);
+        toast.success("User created successfully!");
+      }
       setTimeout(() => {
         navigate("/home");
       }, 1500);
     } catch (error) {
       toast.error(`${error.message}`);
     }
+  };
+
+  const loginUser = async (userData) => {
+    const { cleanEmail: email, password } = userData;
+
+    const loggedUser = await signInUser(email, password);
+
+    if (loggedUser) {
+      setUser(loggedUser);
+      toast.success("Log in successful !");
+    }
+    setTimeout(() => {
+      navigate("/home");
+    }, 1500);
   };
 
   // Form config - used only on login and register pages
@@ -53,6 +69,7 @@ function AuthProvider({ children }) {
     logout,
     formConfig: getFormConfig(),
     registerUser,
+    loginUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

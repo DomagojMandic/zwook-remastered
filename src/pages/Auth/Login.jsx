@@ -1,24 +1,30 @@
-import StyledLogin from "./StyledLogin";
-import Logo from "../../ui/Logo/Logo";
-import FormBase, { FormRow } from "../../features/MediaForms/FormBase";
-import FormInputWIcon from "../../ui/SimpleComponents/FormInputWIcon";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
+
+import StyledLogin from "./StyledLogin";
+import Logo from "../../ui/Logo/Logo";
 import SaveButton from "../../ui/Buttons/SaveButton";
 import StyledHorizontalLine from "../../ui/SimpleComponents/HorizontalLine";
 import FeaturedButton from "../../ui/Buttons/FeaturedButton";
-import { AUTH_CONFIG } from "../../data/authConfig";
 import RightSide from "./RightSide";
+
+import FormBase, { FormRow } from "../../features/MediaForms/FormBase";
+import FormInputWIcon from "../../ui/SimpleComponents/FormInputWIcon";
+
 import { useAuth } from "../../contexts/AuthContext";
 import { onError } from "../../utils/formErrors";
+import { cleanString } from "../../helpers/helpers";
 
 function Login() {
   const { register, handleSubmit } = useForm();
-  const { formConfig } = useAuth();
+  const { formConfig, loginUser, user } = useAuth();
   const { form, layout, fields } = formConfig || {};
 
   function onSubmit(data) {
-    console.log(data);
+    const { email, password } = data;
+    const cleanEmail = cleanString(email);
+
+    loginUser({ cleanEmail, password });
   }
 
   return (

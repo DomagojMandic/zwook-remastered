@@ -1,5 +1,19 @@
 import supabase from "./supabase";
-import defaultUserData from "../data/userCreationConfig";
+
+/* User UUID is in the user_id column of the users table (non auth table) */
+export async function getUser(uuid) {
+  const { data: user, error: getUserError } = await supabase
+    .from("users")
+    .select("*")
+    .eq("user_id", uuid)
+    .single();
+
+  if (getUserError) {
+    throw new Error(`Error fetching user: ${getUserError.message}`);
+  }
+
+  return user;
+}
 
 export async function createUser(userData) {
   const { email, password, full_name, ...rest } = userData;
@@ -45,12 +59,11 @@ export async function createUser(userData) {
   // If the user was created successfully in the Auth table,, insert the user data into the users table
   // with the rest of the data provided in the userData object.
 
-  console.log(createdUser.user.user_metadata, "User");
   if (createdUser?.user) {
     const userMeta = createdUser.user.user_metadata || {};
 
     // Preparing the user object to insert into the users table
-    // (the one that we will update) later
+    // (the one that we will update later)
 
     const userToInsert = {
       user_id: createdUser.user.id, // This will be the UUID from the auth.user
@@ -72,10 +85,26 @@ export async function createUser(userData) {
 
     if (insertError) {
       // If registering is successful and inserting into the additional table fails
+      // we delete the user in the auth table
       await supabase.auth.admin.deleteUser(createdUser.user.id);
       throw new Error(`Error inserting user record: ${insertError.message}`);
     }
+    return userToInsert;
+  }
+}
+
+export async function signInUser(email, password) {
+  let { data: user, error: signInError } =
+    await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+  if (signInError) {
+    throw new Error(`Error while signing in: ${signInError.message}`);
   }
 
-  return createdUser.user.user_metadata;
+  if (user.user.id) {
+    return getUser(user.user.id);
+  }
 }

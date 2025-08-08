@@ -89,3 +89,7 @@ export function parseCustomDate(dateStr) {
 
   return `${day}.${month}.${year}`;
 }
+
+export function cleanString(string) {
+  return string.toLowerCase().trim();
+}

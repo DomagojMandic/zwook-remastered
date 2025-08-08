@@ -17,7 +17,7 @@ import { onError } from "../../utils/formErrors";
 
 function Register() {
   const { register, handleSubmit } = useForm();
-  const { formConfig, registerUser } = useAuth();
+  const { formConfig, registerUser, user } = useAuth();
   const { form, layout, fields } = formConfig || {};
 
   function onSubmit(data) {
@@ -50,7 +50,6 @@ function Register() {
             </StyledLogin.WelcomeText>
           </FormRow>
 
-          {/* Dinamički renderuj sva polja */}
           {fields.map((field) => {
             const { validation, name, icon, type, placeholder, area } = field;
             return (

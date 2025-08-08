@@ -5,8 +5,13 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import StyledInput from "../SimpleComponents/StyledInput";
 import StyledHeader from "./StyledHeader";
 import avatarImg from "../../assets/mock-avatars/image=albertflores.webp";
+import { useAuth } from "../../contexts/AuthContext";
 
 function Header() {
+  const { user } = useAuth();
+
+  console.log(user);
+
   return (
     <StyledHeader>
       <StyledHeader.Nav>
@@ -32,8 +37,12 @@ function Header() {
             </StyledHeader.Wrapper>
             <StyledHeader.Avatar src={avatarImg} alt="User Avatar" />
             <StyledHeader.UserInfo direction="column">
-              <StyledHeader.UserName>John Doe</StyledHeader.UserName>
-              <StyledHeader.UserEmail>avatar@zwook.com</StyledHeader.UserEmail>
+              <StyledHeader.UserName>
+                {user.full_name || undefined}
+              </StyledHeader.UserName>
+              <StyledHeader.UserEmail>
+                {user.email || undefined}
+              </StyledHeader.UserEmail>
             </StyledHeader.UserInfo>
           </StyledHeader.Profile>
           <StyledHeader.Wrapper>
