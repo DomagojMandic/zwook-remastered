@@ -1,16 +1,20 @@
+/*
+Login credentials:
+email: mandic.domagoj214@gmail.com
+password: 12345678
+or create your own account
+*/
 import {
   createBrowserRouter,
   Navigate,
   RouterProvider,
+  Outlet,
 } from "react-router-dom";
 import { lazy } from "react";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
 /* Global CSS Styles */
 import GlobalStyles from "./styles/GlobalStyles";
-
 /* Critical path components - NO lazy loading */
 import Login from "./pages/Auth/Login";
 import AppLayout from "./ui/AppLayout/AppLayout";
@@ -20,6 +24,7 @@ import AudioPlayer from "./features/AudioPlayer/AudioPlayer";
 import ErrorPage from "./pages/Errors/Error";
 import AuthProvider from "./contexts/AuthContext";
 import Register from "./pages/Auth/Register";
+import ProtectedRoute from "./pages/Auth/ProtectedRoute";
 
 /* Lazy loaded components */
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
@@ -37,62 +42,76 @@ const CreatePodcasts = lazy(() => import("./pages/Podcasts/CreatePodcasts"));
 const MediaItemPage = lazy(() => import("./pages/MediaItemPage/MediaItemPage"));
 const MediaForm = lazy(() => import("./pages/MediaForm/MediaForm"));
 
+// AuthProvider wrapper component
+function AuthWrapper() {
+  return (
+    <AuthProvider>
+      <Outlet />
+    </AuthProvider>
+  );
+}
+
 const router = createBrowserRouter([
   {
-    path: "/login",
-    element: (
-      <AuthProvider>
-        <Login />
-      </AuthProvider>
-    ),
-  },
-  {
-    path: "/register",
-    element: (
-      <AuthProvider>
-        <Register />
-      </AuthProvider>
-    ),
-  },
-
-  {
     path: "/",
-    element: (
-      <AuthProvider>
-        <AppLayout />
-      </AuthProvider>
-    ),
-
+    element: <AuthWrapper />,
     children: [
       {
-        index: true,
-        element: <Navigate to="/home" replace />,
+        path: "login",
+        element: <Login />,
       },
-      { path: "home", element: <Dashboard /> },
-      { path: "devices", element: <Devices /> },
-      { path: "subscriptions", element: <Subscriptions /> },
-      { path: "settings", element: <Settings /> },
-      { path: "playlists", element: <PlaylistDetails /> },
-      { path: "albums", element: <Albums /> },
-      { path: "artists", element: <Artists /> },
-      { path: "stations", element: <Stations /> },
-      { path: "podcasts", element: <CreatePodcasts /> },
       {
-        path: "create",
+        path: "register",
+        element: <Register />,
+      },
+      {
+        path: "/",
+        element: (
+          <ProtectedRoute>
+            <AppLayout />
+          </ProtectedRoute>
+        ),
         children: [
           {
-            path: ":type", // Allowed types: artist, album, song
-            element: <MediaForm />,
+            index: true,
+            element: <Navigate to="/home" replace />,
+          },
+          { path: "home", element: <Dashboard /> },
+          { path: "devices", element: <Devices /> },
+          { path: "subscriptions", element: <Subscriptions /> },
+          { path: "settings", element: <Settings /> },
+          { path: "playlists", element: <PlaylistDetails /> },
+          { path: "albums", element: <Albums /> },
+          { path: "artists", element: <Artists /> },
+          { path: "stations", element: <Stations /> },
+          { path: "podcasts", element: <CreatePodcasts /> },
+          {
+            path: "create",
+            children: [
+              {
+                path: ":type", // Allowed types: artist, album, song
+                element: <MediaForm />,
+              },
+            ],
+          },
+          {
+            path: "media",
+            children: [
+              { path: ":type/:mediaItemId", element: <MediaItemPage /> },
+            ],
           },
         ],
       },
       {
-        path: "media",
-        children: [{ path: ":type/:mediaItemId", element: <MediaItemPage /> }],
+        path: "*",
+        element: (
+          <ProtectedRoute>
+            <ErrorPage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
-  { path: "*", element: <ErrorPage /> },
 ]);
 
 // React Query Client and other providers can be added here if needed

@@ -17,7 +17,7 @@ import { cleanString } from "../../helpers/helpers";
 
 function Login() {
   const { register, handleSubmit } = useForm();
-  const { formConfig, loginUser, user } = useAuth();
+  const { formConfig, loginUser } = useAuth();
   const { form, layout, fields } = formConfig || {};
 
   function onSubmit(data) {
@@ -53,7 +53,6 @@ function Login() {
             </StyledLogin.WelcomeText>
           </FormRow>
 
-          {/* Dinamički renderuj sva polja */}
           {fields.map((field) => {
             const { validation, name, icon, type, placeholder, area } = field;
             return (

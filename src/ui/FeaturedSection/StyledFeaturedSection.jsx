@@ -54,6 +54,7 @@ StyledFeaturedSection.Item = styled(Link)`
   position: relative;
   overflow: hidden;
   contain: layout style;
+  backface-visibility: hidden;
 
   &:hover {
     padding-left: 0;
@@ -118,6 +119,7 @@ StyledFeaturedSection.ItemTitle = styled.figcaption`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  backface-visibility: hidden;
 `;
 
 /* Should be used within the figcaption element if we want the scrollAnimation to work */
@@ -128,12 +130,14 @@ StyledFeaturedSection.AnimationSpan = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   transition: transform 0.3s ease;
+  backface-visibility: hidden;
 
   ${StyledFeaturedSection.Item}:hover & {
     width: auto;
     min-width: 100%;
     overflow: visible;
     text-overflow: initial;
+    backface-visibility: hidden;
   }
 `;
 
@@ -144,6 +148,7 @@ StyledFeaturedSection.Image = styled.img`
   border-radius: 8px;
   transition: transform 0.5s ease-in-out;
   transform-origin: bottom;
+  backface-visibility: hidden;
 `;
 
 StyledFeaturedSection.TitleWrapper = styled.div`

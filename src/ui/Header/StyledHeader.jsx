@@ -4,11 +4,15 @@ import styled from "styled-components";
 // 2) StyledHeader.Nav for navigation
 // 3) StyledHeader.Left for left-aligned items
 // 4) StyledHeader.Right for right-aligned items
-// 5.?1) StyledHeader.Profile for user profile section
-// 5?.2) StyledHeader.Avatar for user avatar
-// 5?.3) StyledHeader.UserInfo for user information
-// 5?.4) StyledHeader.UserName for user name
-// 5?.5) StyledHeader.UserEmail for user email
+// 5.1) StyledHeader.Profile for user profile section
+// 5.2) StyledHeader.Avatar for user avatar
+// 5.3) StyledHeader.UserInfo for user information
+// 5.4) StyledHeader.UserName for user name
+// 5.5) StyledHeader.UserEmail for user email
+// 6.1) StyledHeader.DropdownContainer for dropdown wrapper
+// 6.2) StyledHeader.DropdownMenu for dropdown menu
+// 6.3) StyledHeader.DropdownItem for dropdown items
+// 6.4) StyledHeader.DropdownDivider for dropdown divider
 
 const StyledHeader = styled.header`
   border-bottom: 1px solid var(--border-primary-300);
@@ -98,6 +102,8 @@ StyledHeader.Icon = styled.span`
   color: var(--text-secondary-300);
   font-size: ${(props) => (props.size ? props.size : "1.6rem")};
   transition: all 0.3s;
+  transform: ${(props) => (props.$isOpen ? "rotate(180deg)" : "rotate(0deg)")};
+
   ${(props) =>
     props.$hover &&
     `
@@ -106,7 +112,6 @@ StyledHeader.Icon = styled.span`
         cursor: pointer;
       }
     `}
-
   @media (max-width: 768px) {
     width: ${(props) => (props.size ? `calc(${props.size} * 0.9)` : "1.4rem")};
     height: ${(props) => (props.size ? `calc(${props.size} * 0.9)` : "1.4rem")};
@@ -224,6 +229,86 @@ StyledHeader.UserEmail = styled.p`
   @media (max-width: 480px) {
     display: none;
   }
+`;
+
+// DROPDOWN COMPONENTS
+StyledHeader.DropdownContainer = styled.div`
+  position: relative;
+`;
+
+StyledHeader.DropdownMenu = styled.div`
+  position: absolute;
+  top: calc(100% + 1.2rem);
+  right: 0;
+  background: var(--text-dark-500);
+  border: 1px solid var(--border-primary-300);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  z-index: 1050;
+  opacity: ${(props) => (props.$isOpen ? 1 : 0)};
+  visibility: ${(props) => (props.$isOpen ? "visible" : "hidden")};
+  transform: ${(props) =>
+    props.$isOpen ? "translateY(0)" : "translateY(-10px)"};
+  transition: all 0.2s ease-in-out;
+
+  @media (max-width: 768px) {
+    min-width: 180px;
+    right: -1rem;
+  }
+
+  @media (max-width: 480px) {
+    min-width: 160px;
+    right: -2rem;
+  }
+`;
+
+StyledHeader.DropdownItem = styled.button`
+  width: 100%;
+  padding: 1rem 1.5rem;
+  border: none;
+  background: transparent;
+  color: var(--text-primary-300);
+  text-align: left;
+  cursor: pointer;
+  font-size: 1.4rem;
+  transition: background-color 0.2s;
+  border-radius: 0;
+
+  &:first-child {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+  }
+
+  &:last-child {
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
+
+  &:hover {
+    background-color: var(--background-secondary-300);
+  }
+
+  &:focus {
+    outline: none;
+    background-color: var(--background-secondary-100);
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.8rem 1.2rem;
+    font-size: 1.3rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0.7rem 1rem;
+    font-size: 1.2rem;
+  }
+`;
+
+StyledHeader.DropdownDivider = styled.div`
+  height: 1px;
+  background-color: var(--border-primary-300);
+  margin: 0.5rem 0;
 `;
 
 export default StyledHeader;

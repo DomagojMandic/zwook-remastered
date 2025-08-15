@@ -6,9 +6,11 @@ import StyledInput from "../SimpleComponents/StyledInput";
 import StyledHeader from "./StyledHeader";
 import avatarImg from "../../assets/mock-avatars/image=albertflores.webp";
 import { useAuth } from "../../contexts/AuthContext";
+import { useState } from "react";
 
 function Header() {
-  const { user } = useAuth();
+  const [openDropDown, setOpenDropDown] = useState(false);
+  const { user, logoutUser } = useAuth();
 
   console.log(user);
 
@@ -45,11 +47,31 @@ function Header() {
               </StyledHeader.UserEmail>
             </StyledHeader.UserInfo>
           </StyledHeader.Profile>
-          <StyledHeader.Wrapper>
-            <StyledHeader.Icon size="2.4rem" $hover={true}>
-              <MdOutlineKeyboardArrowDown />
-            </StyledHeader.Icon>
-          </StyledHeader.Wrapper>
+          <StyledHeader.DropdownContainer>
+            <StyledHeader.Wrapper>
+              <StyledHeader.Icon
+                size="2.4rem"
+                $hover={true}
+                $isOpen={openDropDown}
+                onClick={() => setOpenDropDown(!openDropDown)}
+              >
+                <MdOutlineKeyboardArrowDown />
+              </StyledHeader.Icon>
+            </StyledHeader.Wrapper>
+
+            <StyledHeader.DropdownMenu $isOpen={openDropDown}>
+              <StyledHeader.DropdownItem onClick={null}>
+                My Profile
+              </StyledHeader.DropdownItem>
+              <StyledHeader.DropdownItem onClick={null}>
+                Settings
+              </StyledHeader.DropdownItem>
+              <StyledHeader.DropdownDivider />
+              <StyledHeader.DropdownItem onClick={() => logoutUser()}>
+                Sign Out
+              </StyledHeader.DropdownItem>
+            </StyledHeader.DropdownMenu>
+          </StyledHeader.DropdownContainer>
         </StyledHeader.Right>
       </StyledHeader.Nav>
     </StyledHeader>

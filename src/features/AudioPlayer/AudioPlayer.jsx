@@ -33,8 +33,11 @@ import {
 } from "../../redux-slices/audioReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { formatTime } from "../../helpers/helpers";
+import { useAuth } from "../../contexts/AuthContext";
 
 const AudioPlayer = () => {
+  // If the user is not logged in, don't show the audio player.
+
   // REDUX: Get current audio state from store
   const audioState = useSelector((state) => state.audio);
 

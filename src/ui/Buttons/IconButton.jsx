@@ -15,6 +15,12 @@ const StyledIconButton = styled.button`
   &:hover {
     background: rgba(0, 0, 0, 0.07);
   }
+
+  position: ${(props) => props.$position || "static"};
+  top: ${(props) => props.$top || "auto"};
+  right: ${(props) => props.$right || "auto"};
+  bottom: ${(props) => props.$bottom || "auto"};
+  left: ${(props) => props.$left || "auto"};
 `;
 
 const IconButton = ({ children, ...props }) => (

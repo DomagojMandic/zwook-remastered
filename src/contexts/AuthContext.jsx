@@ -2,58 +2,53 @@ import { createContext, use, useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 
 import { AUTH_CONFIG } from "../data/authConfig";
-import defaultUserData from "../data/userCreationConfig";
 import toast from "react-hot-toast";
-import { createUser, signInUser } from "../services/apiUsers";
-import { useLocalStorageState } from "../hooks/useLocalStorageState";
+
+import { useDispatch, useSelector } from "react-redux";
+import {
+  clearUser,
+  loginUserThunk,
+  registerUserThunk,
+} from "../redux-slices/userReducer";
 
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
-  /* Getting information from local storage upon initial render */
-  const [user, setUser] = useLocalStorageState(null, "user");
+  /* This Context is used for authenticating the user within the application.
+  It used to solely manage user authentication state and actions but it is refactored
+  to Redux Toolkit for a more stable development (hot module fix).*/
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Auth functions
-  const login = async () => {};
-  const logout = () => setUser(null);
-
   const registerUser = async (userData) => {
     try {
-      // Receives the user data from the register form and combines it with
-      // default user data to create a new user in the database
-      const { fullName: full_name, email, password } = userData;
-
-      const signUpData = { full_name, email, password, ...defaultUserData };
-
-      const createdUser = await createUser(signUpData);
-
-      if (createdUser) {
-        setUser(createdUser);
-        localStorage.setItem("user", createdUser);
-        toast.success("User created successfully!");
-      }
-      setTimeout(() => {
-        navigate("/home");
-      }, 1500);
+      await dispatch(registerUserThunk(userData)).unwrap();
+      toast.success("User created successfully!");
+      setTimeout(() => navigate("/home"), 1500);
     } catch (error) {
-      toast.error(`${error.message}`);
+      toast.error(error);
     }
   };
 
   const loginUser = async (userData) => {
-    const { cleanEmail: email, password } = userData;
-
-    const loggedUser = await signInUser(email, password);
-
-    if (loggedUser) {
-      setUser(loggedUser);
-      toast.success("Log in successful !");
+    try {
+      await dispatch(loginUserThunk(userData)).unwrap();
+      toast.success("Login successful!");
+      setTimeout(() => navigate("/home"), 1500);
+    } catch (error) {
+      toast.error(error);
     }
+  };
+
+  const logoutUser = () => {
+    navigate("/login");
+
     setTimeout(() => {
-      navigate("/home");
+      dispatch(clearUser());
     }, 1500);
+    toast.success("Logout successful!");
   };
 
   // Form config - used only on login and register pages
@@ -65,11 +60,10 @@ function AuthProvider({ children }) {
 
   const value = {
     user,
-    login,
-    logout,
     formConfig: getFormConfig(),
     registerUser,
     loginUser,
+    logoutUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

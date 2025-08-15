@@ -1,5 +1,5 @@
 // =========================
-// 🎵 AUDIO EVENT HANDLERS
+// AUDIO EVENT HANDLERS
 // =========================
 // These functions respond to events from the HTML audio element
 // They keep Redux state in sync with what's actually happening

@@ -29,6 +29,7 @@ StyledLogin.Right = styled.div`
   background-color: var(--background-surface-500);
   position: relative;
   overflow: hidden;
+  z-index: 3000;
 `;
 
 StyledLogin.WelcomeTitle = styled.h1`
