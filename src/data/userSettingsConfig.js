@@ -1,10 +1,26 @@
-import { parse } from "zod";
 import { parseCustomDate } from "../helpers/helpers";
 
 export const USER_SETTINGS_CONFIG = {
+  ui: {
+    gridTemplateAreas: `
+     "edit save"
+     "personal-title personal-title"
+     "cover_url full_name"
+     "display_name display_name"
+     "account-settings-title account-settings-title"
+     "subscribed ."
+     "account-info-title account-info-title"
+     "email email_verified"
+     "created_at created_at"
+     "subscription_start_date subscription_end_date"
+    `,
+    gridTemplateAreasResp: "test",
+  },
   sections: [
     {
       title: "Personal Information",
+      gridArea: "personal-title",
+      readOnly: false,
       fields: [
         {
           name: "full_name",
@@ -51,7 +67,7 @@ export const USER_SETTINGS_CONFIG = {
         {
           name: "cover_url",
           label: "Profile Cover Image URL",
-          type: "url",
+          type: "image",
           editable: true,
           required: false,
           placeholder: "",
@@ -61,6 +77,8 @@ export const USER_SETTINGS_CONFIG = {
     },
     {
       title: "Account Settings",
+      gridArea: "account-settings-title",
+      readOnly: true,
       fields: [
         {
           name: "subscribed",
@@ -68,11 +86,13 @@ export const USER_SETTINGS_CONFIG = {
           type: "subscription-status",
           editable: false,
           description: "Access premium features and content",
+          format: (value) => (value ? "Subscribed" : "Not Subscribed"),
         },
       ],
     },
     {
       title: "Account Information",
+      gridArea: "account-info-title",
       readOnly: true,
       fields: [
         {
@@ -102,7 +122,6 @@ export const USER_SETTINGS_CONFIG = {
           editable: false,
           format: (value) =>
             value ? parseCustomDate(value) : "Not subscribed",
-          condition: (data) => data.subscribed,
         },
         {
           name: "subscription_end_date",
@@ -111,7 +130,6 @@ export const USER_SETTINGS_CONFIG = {
           editable: false,
           format: (value) =>
             value ? parseCustomDate(value) : "Not subscribed",
-          condition: (data) => data.subscribed,
         },
       ],
     },

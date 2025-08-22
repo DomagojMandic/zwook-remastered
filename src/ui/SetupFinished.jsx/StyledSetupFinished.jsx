@@ -9,6 +9,7 @@ const StyledSetupFinished = styled.div`
   padding: 1rem 0rem;
   background-color: var(--background-surface-500);
   color: var(--text-dark-500);
+  position: relative;
 
   font-size: 1.6rem;
   font-weight: 500;
