@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loadKey, removeKey, saveKey } from "../helpers/localStorageHelpers";
-import { createUser, signInUser } from "../services/apiUsers";
+import { createUser, signInUser, updateUser } from "../services/apiUsers";
 import defaultUserData from "../data/userCreationConfig";
 
 const initialState = {
   user: loadKey("user"),
   isLoadingUser: false,
+  isUpdatingUser: false, // Separate loading state for updates
   error: null,
 };
 
@@ -41,6 +42,26 @@ export const loginUserThunk = createAsyncThunk(
   }
 );
 
+export const updateUserProfileThunk = createAsyncThunk(
+  "user/updateProfile",
+  async ({ userId, userData }, { rejectWithValue, getState }) => {
+    try {
+      const updatedUserData = await updateUser(userId, userData);
+
+      // Get current user from state and merge with updated data
+      const currentUser = getState().user.user;
+      const mergedUser = { ...currentUser, ...updatedUserData[0] };
+
+      // Save updated user to localStorage
+      saveKey("user", mergedUser);
+
+      return mergedUser;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -50,6 +71,17 @@ const userSlice = createSlice({
       state.user = null;
       state.error = null;
       removeKey("user");
+    },
+    // Clear error manually if needed
+    clearError: (state) => {
+      state.error = null;
+    },
+    // Update user data locally without API call (for optimistic updates if needed)
+    updateUserLocal: (state, action) => {
+      if (state.user) {
+        state.user = { ...state.user, ...action.payload };
+        saveKey("user", state.user);
+      }
     },
   },
   extraReducers: (builder) => {
@@ -81,9 +113,23 @@ const userSlice = createSlice({
       .addCase(loginUserThunk.rejected, (state, action) => {
         state.isLoadingUser = false;
         state.error = action.payload;
+      })
+      // Update user profile thunk
+      .addCase(updateUserProfileThunk.pending, (state) => {
+        state.isUpdatingUser = true;
+        state.error = null;
+      })
+      .addCase(updateUserProfileThunk.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isUpdatingUser = false;
+        state.error = null;
+      })
+      .addCase(updateUserProfileThunk.rejected, (state, action) => {
+        state.isUpdatingUser = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const { clearUser, clearError } = userSlice.actions;
+export const { clearUser, clearError, updateUserLocal } = userSlice.actions;
 export default userSlice.reducer;

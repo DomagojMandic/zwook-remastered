@@ -7,12 +7,12 @@ import StyledHeader from "./StyledHeader";
 import avatarImg from "../../assets/mock-avatars/image=albertflores.webp";
 import { useAuth } from "../../contexts/AuthContext";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 function Header() {
   const [openDropDown, setOpenDropDown] = useState(false);
-  const { user, logoutUser } = useAuth();
-
-  console.log(user);
+  const { user } = useSelector((state) => state.user);
+  const { logoutUser } = useAuth();
 
   return (
     <StyledHeader>
@@ -37,10 +37,16 @@ function Header() {
                 <IoIosNotificationsOutline />
               </StyledHeader.Icon>
             </StyledHeader.Wrapper>
-            <StyledHeader.Avatar src={avatarImg} alt="User Avatar" />
+            <StyledHeader.Avatar
+              src={
+                user.cover_url ||
+                "https://abawfcbqrulsptzzrfta.supabase.co/storage/v1/object/public/images/users/defaultProfilePicture.jpg"
+              }
+              alt="User Avatar"
+            />
             <StyledHeader.UserInfo direction="column">
               <StyledHeader.UserName>
-                {user.full_name || undefined}
+                {user.display_name || user.full_name}
               </StyledHeader.UserName>
               <StyledHeader.UserEmail>
                 {user.email || undefined}

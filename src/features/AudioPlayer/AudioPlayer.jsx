@@ -33,11 +33,10 @@ import {
 } from "../../redux-slices/audioReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { formatTime } from "../../helpers/helpers";
-import { useAuth } from "../../contexts/AuthContext";
 
 const AudioPlayer = () => {
   // If the user is not logged in, don't show the audio player.
-
+  const user = useSelector((state) => state.user);
   // REDUX: Get current audio state from store
   const audioState = useSelector((state) => state.audio);
 
@@ -489,6 +488,24 @@ const AudioPlayer = () => {
     }
   }, [isPlaying, currentTrack, dispatch]);
   // Runs whenever isPlaying changes (from MediaItemContent play/pause buttons)
+
+  // If user logs out, reset audio player state and hide player
+  if (!user.user) {
+    // Pause the audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current.src = "";
+    }
+    // Reset the Redux audio state
+    dispatch(setPlaying(false));
+    dispatch(setCurrentTime(0));
+    dispatch(setDuration(0));
+    dispatch(setError(null));
+    dispatch(setLoading(false));
+    // Hide the player
+    return null;
+  }
 
   // ===================================================================
   // EARLY RETURN: Don't render if no track loaded

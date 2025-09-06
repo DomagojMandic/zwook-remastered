@@ -15,7 +15,7 @@ const AuthContext = createContext();
 
 function AuthProvider({ children }) {
   /* This Context is used for authenticating the user within the application.
-  It used to solely manage user authentication state and actions but it is refactored
+  It's used to solely manage user authentication state and actions but it is refactored
   to Redux Toolkit for a more stable development (hot module fix).*/
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);

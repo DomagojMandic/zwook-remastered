@@ -66,7 +66,7 @@ export const USER_SETTINGS_CONFIG = {
         },
         {
           name: "cover_url",
-          label: "Profile Cover Image URL",
+          label: "Profile Cover Image",
           type: "image",
           editable: true,
           required: false,

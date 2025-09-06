@@ -5,13 +5,17 @@ import FormInput from "../../ui/SimpleComponents/FormInput";
 import FormTextarea from "../../ui/SimpleComponents/FormTextarea";
 import FormUploadMedia from "../../ui/SimpleComponents/FormUploadMedia";
 import FormLabel from "../../ui/SimpleComponents/FormLabel";
-import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
 import SaveButton from "../../ui/Buttons/SaveButton";
 import FeaturedButton from "../../ui/Buttons/FeaturedButton";
+import ImageUpload from "../../ui/SimpleComponents/FormUploadCoverImg";
+import { editFileName } from "../../helpers/helpers";
+import { updateUserProfileThunk } from "../../redux-slices/userReducer";
+import toast from "react-hot-toast";
 
 /* This will later be seperated into editable and non editable fields */
-function renderField(field, user, register, editing) {
+function renderField(field, user, register, control, editing) {
   const value = field.format
     ? field.format(user[field.name])
     : user[field.name];
@@ -50,13 +54,18 @@ function renderField(field, user, register, editing) {
         />
       )}
       {field.type === "image" && (
-        <FormInput
-          {...register(field.name, field.validation)}
-          defaultValue={value}
-          placeholder={field.placeholder}
-          id={field.name}
-          disabled={!field.editable || !editing}
-        />
+        <>
+          {/* Hidden field so the cover url can be registered in the form */}
+          <input {...register(field.name)} type="hidden" defaultValue={value} />
+          <ImageUpload
+            name={field.name}
+            control={control}
+            rules={field.validation}
+            defaultValue={value}
+            placeholder={field.placeholder}
+            disabled={!field.editable || !editing}
+          />
+        </>
       )}
       {field.type === "subscription-status" && (
         <FormInput
@@ -72,12 +81,14 @@ function renderField(field, user, register, editing) {
 }
 
 function Settings() {
-  const { user } = useSelector((state) => state.user);
+  const { user, isUpdatingUser, error } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const [initialData, setInitialData] = useState(user);
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, control } = useForm();
   const [editing, setEditing] = useState(false);
 
-  function handleEditing() {
+  function handleEditing(e) {
+    e.preventDefault();
     if (editing) {
       // The following object represents the formatted user data upon exiting (cancelling)
       // the edit mode
@@ -97,8 +108,47 @@ function Settings() {
     setEditing(!editing);
   }
 
-  function onSubmit(data) {
-    console.log(data);
+  async function onSubmit(data) {
+    try {
+      // Currently, only 3 properties are available for changing so we are preparing them
+      const formattedData = {
+        cover_url: data.cover_url, // url of the current image that will later be used for deleting the image
+        HasNewImage: data.HasNewImage,
+        displayName: data?.display_name,
+        fullName: data?.full_name,
+      };
+
+      if (data.HasNewImage) {
+        // Handle new image upload
+        const fileName = `${
+          data.File ? data.File.lastModified + data.File.name : ""
+        }`;
+        const formattedFileName = editFileName(fileName);
+        formattedData.fileName = formattedFileName;
+        formattedData.file = data.File;
+      }
+
+      console.log(formattedData);
+
+      // Dispatch the Redux thunk
+      const result = await dispatch(
+        updateUserProfileThunk({
+          userId: user.user_id,
+          userData: formattedData,
+        })
+      ).unwrap(); // unwrap() to handle promise rejection
+
+      // On Success: Show success toast
+      toast.success("Profile updated successfully!");
+
+      // Exit edit mode after successful update
+      setEditing(false);
+
+      // Update initial data with new values for future cancellations
+      setInitialData(result);
+    } catch (error) {
+      toast.error(`Error updating profile: ${error}`);
+    }
   }
 
   return (
@@ -108,13 +158,20 @@ function Settings() {
       $gridColumnAreasResponsive={USER_SETTINGS_CONFIG.ui.gridTemplateAreasResp}
     >
       <FormRow $area="edit">
-        <FeaturedButton onClick={handleEditing}>
+        <FeaturedButton
+          onClick={(e) => handleEditing(e)}
+          disabled={isUpdatingUser}
+        >
           {editing ? "Cancel" : "Edit"}
         </FeaturedButton>
       </FormRow>
 
       <FormRow $area="save">
-        {editing && <SaveButton>Save Changes</SaveButton>}
+        {editing && (
+          <SaveButton disabled={isUpdatingUser}>
+            {isUpdatingUser ? "Saving..." : "Save Changes"}
+          </SaveButton>
+        )}
       </FormRow>
 
       {USER_SETTINGS_CONFIG.sections.map((section) => (
@@ -123,7 +180,7 @@ function Settings() {
             <h2>{section.title}</h2>
           </FormRow>
           {section.fields.map((field) =>
-            renderField(field, user, register, editing)
+            renderField(field, user, register, control, editing)
           )}
         </>
       ))}

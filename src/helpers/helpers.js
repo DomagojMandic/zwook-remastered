@@ -93,3 +93,18 @@ export function parseCustomDate(dateStr) {
 export function cleanString(string) {
   return string.toLowerCase().trim();
 }
+
+export function getStorageImagePath(imagePath) {
+  const partsOfUrl = imagePath.split("/");
+
+  // Find the index of "public"
+  const publicIndex = partsOfUrl.indexOf("public");
+  if (publicIndex === -1) return null;
+
+  // This will be used to delete the image from the storage bucket
+  const bucket = partsOfUrl[publicIndex + 1]; // "images"
+  // Takes the parts of the array from the publicIndex +2 until the end of the array and joins them with "/"
+  const relativePath = partsOfUrl.slice(publicIndex + 2).join("/"); // "users/xyz.jpg"
+
+  return { bucket, relativePath };
+}

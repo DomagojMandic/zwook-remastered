@@ -1,4 +1,8 @@
-import supabase from "./supabase";
+import { getStorageImagePath } from "../helpers/helpers";
+import supabase, { SUPABASE_URL } from "./supabase";
+
+const DEFAULT_PROFILE_PIC =
+  "https://abawfcbqrulsptzzrfta.supabase.co/storage/v1/object/public/images/users/defaultProfilePicture.jpg";
 
 /* User UUID is in the user_id column of the users table (non auth table) */
 export async function getUser(uuid) {
@@ -106,5 +110,134 @@ export async function signInUser(email, password) {
 
   if (user.user.id) {
     return getUser(user.user.id);
+  }
+}
+
+/**
+ * Updates user profile with new information and optionally a new profile image
+ * Handles rollback if any part of the update process fails
+ */
+export async function updateUser(uuid, userData) {
+  // Input validation
+  if (!userData) {
+    throw new Error("User data is required");
+  }
+
+  if (userData.HasNewImage && !userData.file) {
+    throw new Error("File is required when HasNewImage is true");
+  }
+
+  // If no new image, just update the database directly
+  if (!userData.HasNewImage || !userData.file) {
+    const { data, error } = await supabase
+      .from("users")
+      .update({
+        display_name: userData.displayName,
+        full_name: userData.fullName || null,
+      })
+      .eq("user_id", uuid)
+      .select();
+
+    if (error) {
+      throw new Error(`Failed to update user data: ${error.message}`);
+    }
+
+    return data;
+  }
+
+  // Keeping track of initial state for potential rollback
+  const originalCoverUrl = userData.cover_url;
+  let newCoverUrl = originalCoverUrl;
+  let newUploadedPath = null;
+  let bucket = null;
+  let oldRelativePath = null;
+
+  try {
+    // Handle image upload if a new image is provided
+    if (userData.HasNewImage && userData.file) {
+      // Extract storage bucket info from current cover URL
+      const storageInfo = getStorageImagePath(userData.cover_url);
+      bucket = storageInfo.bucket;
+      oldRelativePath = storageInfo.relativePath;
+
+      // Create new filename with users/ prefix
+      const newFileName = `users/${userData.fileName}`;
+      newUploadedPath = newFileName;
+
+      // Upload the new image to Supabase storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from(bucket)
+        .upload(newFileName, userData.file, { upsert: true });
+
+      // If upload fails, we don't need to rollback anything yet
+      if (uploadError) {
+        throw new Error(`Failed to upload new image: ${uploadError.message}`);
+      }
+
+      // Construct the new public URL
+      newCoverUrl = `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${newFileName}`;
+    }
+
+    // Try to update user record in database first
+    const { data, error: updateError } = await supabase
+      .from("users")
+      .update({
+        cover_url: newCoverUrl,
+        display_name: userData.displayName,
+        full_name: userData.fullName || null,
+      })
+      .eq("user_id", uuid)
+      .select();
+
+    if (updateError) {
+      throw new Error(`Failed to update user data: ${updateError.message}`);
+    }
+
+    // Only delete old image after successful database update
+    if (userData.cover_url !== DEFAULT_PROFILE_PIC && oldRelativePath) {
+      const { error: deleteError } = await supabase.storage
+        .from(bucket)
+        .remove([oldRelativePath]);
+
+      // Log deletion error but don't fail the entire operation
+      if (deleteError) {
+        console.warn(`Failed to delete old image: ${deleteError.message}`);
+      }
+    }
+
+    return data;
+  } catch (error) {
+    // Rollback process if anything fails
+    try {
+      // Delete any newly uploaded image
+      if (newUploadedPath && bucket) {
+        await supabase.storage.from(bucket).remove([newUploadedPath]);
+      }
+    } catch (rollbackError) {
+      // Log rollback errors but throw the original error
+      console.error(
+        "Error during rollback - failed to delete uploaded image:",
+        rollbackError
+      );
+    }
+
+    try {
+      // Revert database changes if cover_url was changed
+      if (newCoverUrl !== originalCoverUrl) {
+        await supabase
+          .from("users")
+          .update({ cover_url: originalCoverUrl })
+          .eq("user_id", uuid);
+      }
+    } catch (rollbackError) {
+      // Log rollback errors but throw the original error
+      console.error(
+        "Error during rollback - failed to revert database changes:",
+        rollbackError
+      );
+    }
+
+    // Throw the original error
+    throw error;
   }
 }
