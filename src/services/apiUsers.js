@@ -2,7 +2,7 @@ import { getStorageImagePath } from "../helpers/helpers";
 import supabase, { SUPABASE_URL } from "./supabase";
 
 const DEFAULT_PROFILE_PIC =
-  "https://abawfcbqrulsptzzrfta.supabase.co/storage/v1/object/public/images/users/defaultProfilePicture.jpg";
+  "https://qknygtdgwhqecuhocmas.supabase.co/storage/v1/object/public/images/users/default-pfp.jpg";
 
 /* User UUID is in the user_id column of the users table (non auth table) */
 export async function getUser(uuid) {
@@ -36,7 +36,7 @@ export async function createUser(userData) {
 
   if (existingUserError && existingUserError.code !== "PGRST116") {
     throw new Error(
-      `Error checking existing user: ${existingUserError.message}`
+      `Error checking existing user: ${existingUserError.message}`,
     );
   }
 
@@ -217,7 +217,7 @@ export async function updateUser(uuid, userData) {
       // Log rollback errors but throw the original error
       console.error(
         "Error during rollback - failed to delete uploaded image:",
-        rollbackError
+        rollbackError,
       );
     }
 
@@ -233,7 +233,7 @@ export async function updateUser(uuid, userData) {
       // Log rollback errors but throw the original error
       console.error(
         "Error during rollback - failed to revert database changes:",
-        rollbackError
+        rollbackError,
       );
     }
 
